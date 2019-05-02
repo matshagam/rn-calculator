@@ -31,7 +31,6 @@ export default class StateProvider extends Component {
 
   componentWillMount() {
     this._retrieveData();
-    this._retrieveHistory();
     this._retrieveSettings();
   }
 
@@ -79,6 +78,8 @@ export default class StateProvider extends Component {
       this.setState(state => ({
         saveHistory: value === 'true' ? true : state.saveHistory
       }));
+
+      if (value === 'true') this._retrieveHistory();
     }
   };
 
