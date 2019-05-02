@@ -30,9 +30,6 @@ export default class StateProvider extends Component {
       styles: styles,
       buttons: buttons
     };
-    this._clearHistory = this._clearHistory.bind(this);
-    this._handleEvent = this._handleEvent.bind(this);
-    this._showSettings = this._showSettings.bind(this);
   }
 
   componentWillMount() {

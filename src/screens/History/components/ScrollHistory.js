@@ -12,6 +12,7 @@ export const ScrollHistory = () => {
             marginTop: 25
           }}
           ref={ref => (this.scrollView = ref)}
+          showsVerticalScrollIndicator={false}
           onContentSizeChange={() => {
             this.scrollView.scrollToEnd({ animated: true });
           }}
