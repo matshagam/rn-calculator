@@ -3,39 +3,42 @@ import { ScrollView, View, Text } from 'react-native';
 
 import { StateContext } from '../../../store/StateProvider';
 
-export const ScrollHistory = () => {
-  return (
-    <StateContext.Consumer>
-      {({ theme, styles, history }) => (
-        <ScrollView
-          style={{
-            marginTop: 25
-          }}
-          ref={ref => (this.scrollView = ref)}
-          showsVerticalScrollIndicator={false}
-          onContentSizeChange={() => {
-            this.scrollView.scrollToEnd({ animated: true });
-          }}
-        >
-          {history.map((thisHistory, index) => (
-            <View key={index} style={styles.historyCont}>
-              <View style={styles.expressionCont}>
-                <Text
-                  style={[
-                    styles.txtExpression,
-                    { color: theme.primaryColorTxt }
-                  ]}
-                >
-                  {thisHistory[0]}
-                </Text>
-              </View>
-              <View style={styles.resultCont}>
-                <Text style={styles.txtResult}>{'= ' + thisHistory[1]}</Text>
-              </View>
-            </View>
-          ))}
-        </ScrollView>
-      )}
-    </StateContext.Consumer>
-  );
-};
+export const ScrollHistory = () => (
+  <StateContext.Consumer>
+    {({ theme, styles, history }) => (
+      <ScrollView
+        style={{
+          marginTop: 25
+        }}
+        ref={ref => (this.scrollView = ref)}
+        showsVerticalScrollIndicator={false}
+        onContentSizeChange={() => {
+          this.scrollView.scrollToEnd({ animated: true });
+        }}
+      >
+        {Object.keys(history).map((key, i) => (
+          <View key={i} style={styles.historyCont}>
+            {history[key].map((thisHistory, index) => {
+              return index === 0 ? (
+                <View key={index} style={styles.expressionCont}>
+                  <Text
+                    style={[
+                      styles.txtExpression,
+                      { color: theme.primaryColorTxt }
+                    ]}
+                  >
+                    {thisHistory}
+                  </Text>
+                </View>
+              ) : (
+                <View key={index} style={styles.resultCont}>
+                  <Text style={styles.txtResult}>{'= ' + thisHistory}</Text>
+                </View>
+              );
+            })}
+          </View>
+        ))}
+      </ScrollView>
+    )}
+  </StateContext.Consumer>
+);

@@ -13,37 +13,73 @@ import {
 export const StateContext = React.createContext();
 
 export default class StateProvider extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      firstSymbolOutput: '',
-      firstNumberOutput: initialOutput,
-      secondSymbolOutput: '',
-      secondNumberOutput: initialOutput,
-      history: [],
-      saveHistory: false,
-      messageVisible: false,
-      settingsVisible: false,
-      message: '',
-      themeColor: 'light',
-      theme: theme.light,
-      styles: styles,
-      buttons: buttons
-    };
-  }
+  state = {
+    firstSymbolOutput: '',
+    firstNumberOutput: initialOutput,
+    secondSymbolOutput: '',
+    secondNumberOutput: initialOutput,
+    history: [],
+    saveHistory: false,
+    messageVisible: false,
+    settingsVisible: false,
+    message: '',
+    themeColor: 'light',
+    theme: theme.light,
+    styles: styles,
+    buttons: buttons
+  };
 
   componentWillMount() {
     this._retrieveData();
+    this._retrieveHistory();
+    this._retrieveSettings();
   }
 
   componentWillUpdate(nextProps, nextState) {
     if (nextState.themeColor !== this.state.themeColor) {
       this._storeData(nextState.themeColor);
     }
+
+    if (nextState.saveHistory !== this.state.saveHistory) {
+      this._storeSettings(nextState.saveHistory);
+    }
+
+    if (
+      nextState.history.length !== this.state.history.length &&
+      nextState.saveHistory === true
+    ) {
+      this._storeHistory(nextState.history);
+    }
   }
+
+  _storeHistory = async props => {
+    await AsyncStorage.setItem('history', JSON.stringify(props));
+  };
 
   _storeData = async props => {
     await AsyncStorage.setItem('themeColor', props);
+  };
+
+  _storeSettings = async props => {
+    await AsyncStorage.setItem('settings', JSON.stringify(props));
+  };
+
+  _retrieveHistory = async () => {
+    const value = await AsyncStorage.getItem('history');
+    if (value !== null) {
+      this.setState({
+        history: JSON.parse(value)
+      });
+    }
+  };
+
+  _retrieveSettings = async () => {
+    const value = await AsyncStorage.getItem('settings');
+    if (value !== null) {
+      this.setState(state => ({
+        saveHistory: value === 'true' ? true : state.saveHistory
+      }));
+    }
   };
 
   _retrieveData = async () => {

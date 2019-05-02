@@ -72,35 +72,7 @@ export const Settings = () => {
                   />
                 </TouchableOpacity>
               </View>
-              <View
-                style={{
-                  width: '100%',
-                  height: 40,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}
-              >
-                <Text
-                  style={{
-                    color: theme.secondaryColorTxt
-                  }}
-                >
-                  Очиститить данные
-                </Text>
-                <TouchableOpacity
-                  style={{ opacity: 0.5, width: 23, alignItems: 'center' }}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                >
-                  <Ionicons
-                    size={23}
-                    name={saveHistory ? 'ios-trash' : null}
-                    color={theme.secondaryColorTxt}
-                  />
-                </TouchableOpacity>
-              </View>
             </View>
-
             <TouchableOpacity
               style={{ alignItems: 'center', opacity: 0.5 }}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
