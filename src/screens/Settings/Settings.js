@@ -1,94 +1,90 @@
-import React from 'react';
-import { Modal, View, TouchableOpacity, Text, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useContext } from "react";
+import { Modal, View, TouchableOpacity, Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-import { StateContext } from '../../store/StateProvider';
+import { StateContext } from "../../store/StateProvider";
 
 export const Settings = () => {
+  const {
+    settingsVisible,
+    theme,
+    styles,
+    saveHistory,
+    _showSettings,
+    _saveData,
+  } = useContext(StateContext);
+
   return (
-    <StateContext.Consumer>
-      {({
-        settingsVisible,
-        theme,
-        styles,
-        saveHistory,
-        _showSettings,
-        _saveData
-      }) => (
-        <Modal animationType='slide' visible={settingsVisible}>
-          <View
-            style={[
-              styles.modalView,
-              {
-                backgroundColor: theme.primaryColor
-              }
-            ]}
+    <Modal animationType="slide" visible={settingsVisible}>
+      <View
+        style={[
+          styles.modalView,
+          {
+            backgroundColor: theme.primaryColor,
+          },
+        ]}
+      >
+        <View
+          style={{
+            flex: 1,
+            paddingTop: styles.container.paddingTop,
+          }}
+        >
+          <Text
+            style={{
+              color: theme.secondaryColorTxt,
+              alignSelf: "center",
+              fontSize: 20,
+              marginBottom: 20,
+            }}
           >
-            <View
+            НАСТРОЙКИ КАЛЬКУЛЯТОРА
+          </Text>
+          <View
+            style={{
+              width: "100%",
+              height: 40,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text
               style={{
-                flex: 1,
-                marginTop: 20
+                color: theme.secondaryColorTxt,
               }}
             >
-              <Text
-                style={{
-                  color: theme.secondaryColorTxt,
-                  alignSelf: 'center',
-                  fontSize: 20,
-                  marginBottom: 20
-                }}
-              >
-                НАСТРОЙКИ КАЛЬКУЛЯТОРА
-              </Text>
-              <View
-                style={{
-                  width: '100%',
-                  height: 40,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}
-              >
-                <Text
-                  style={{
-                    color: theme.secondaryColorTxt
-                  }}
-                >
-                  {saveHistory
-                    ? 'История сохраняется'
-                    : 'История не сохраняется'}
-                </Text>
-                <TouchableOpacity
-                  style={{ opacity: 0.5, width: 23, alignItems: 'center' }}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                  onPress={() => {
-                    _saveData();
-                  }}
-                >
-                  <Ionicons
-                    size={23}
-                    color={theme.secondaryColorTxt}
-                    name={saveHistory ? 'ios-cloud' : 'ios-cloud-outline'}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
+              {saveHistory ? "История сохраняется" : "История не сохраняется"}
+            </Text>
             <TouchableOpacity
-              style={{ alignItems: 'center', opacity: 0.5 }}
+              style={{ opacity: 0.5, width: 23, alignItems: "center" }}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               onPress={() => {
-                _showSettings();
+                _saveData();
               }}
             >
               <Ionicons
-                size={35}
-                name='ios-arrow-down'
+                size={23}
                 color={theme.secondaryColorTxt}
+                name={saveHistory ? "ios-cloud" : "ios-cloud-outline"}
               />
             </TouchableOpacity>
           </View>
-        </Modal>
-      )}
-    </StateContext.Consumer>
+        </View>
+        <TouchableOpacity
+          style={{ alignItems: "center", opacity: 0.5 }}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          onPress={() => {
+            _showSettings();
+          }}
+        >
+          <Ionicons
+            size={35}
+            name="ios-arrow-down"
+            color={theme.secondaryColorTxt}
+          />
+        </TouchableOpacity>
+      </View>
+    </Modal>
   );
 };

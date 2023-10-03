@@ -1,207 +1,207 @@
-import React, { Component } from 'react';
-import { Clipboard } from 'react-native';
-import { AsyncStorage } from 'react-native';
+import React, { createContext, useEffect, useState } from "react";
+import Clipboard from "@react-native-community/clipboard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   buttons,
   initialOutput,
   maxLength,
   theme,
-  styles
-} from '../initialState';
+  styles,
+} from "../initialState";
 
-export const StateContext = React.createContext();
+export const StateContext = createContext();
 
-export default class StateProvider extends Component {
-  state = {
-    firstSymbolOutput: '',
+export default ({ children }) => {
+  const [state, setState] = useState({
+    firstSymbolOutput: "",
     firstNumberOutput: initialOutput,
-    secondSymbolOutput: '',
+    secondSymbolOutput: "",
     secondNumberOutput: initialOutput,
     history: [],
     saveHistory: false,
     messageVisible: false,
     settingsVisible: false,
-    message: '',
-    themeColor: 'light',
+    message: "",
+    themeColor: "light",
     theme: theme.light,
     styles: styles,
-    buttons: buttons
-  };
+    buttons: buttons,
+  });
 
-  componentWillMount() {
-    this._retrieveData();
-    this._retrieveSettings();
-  }
+  useEffect(() => {
+    _retrieveData();
+    _retrieveSettings();
+  }, []);
 
-  componentWillUpdate(nextProps, nextState) {
-    if (nextState.themeColor !== this.state.themeColor) {
-      this._storeData(nextState.themeColor);
+  useEffect(() => {
+    _storeData(state.themeColor);
+  }, [state.themeColor]);
+
+  useEffect(() => {
+    _storeSettings(state.saveHistory);
+
+    if (state.saveHistory) {
+      _storeHistory(state.history);
     }
+  }, [state.saveHistory, state.history]);
 
-    if (nextState.saveHistory !== this.state.saveHistory) {
-      this._storeSettings(nextState.saveHistory);
-    }
-
-    if (
-      nextState.history.length !== this.state.history.length &&
-      nextState.saveHistory === true
-    ) {
-      this._storeHistory(nextState.history);
-    }
-  }
-
-  _storeHistory = async props => {
-    await AsyncStorage.setItem('history', JSON.stringify(props));
+  const _storeHistory = async (props) => {
+    await AsyncStorage.setItem("history", JSON.stringify(props));
   };
 
-  _storeData = async props => {
-    await AsyncStorage.setItem('themeColor', props);
+  const _storeData = async (props) => {
+    await AsyncStorage.setItem("themeColor", props);
   };
 
-  _storeSettings = async props => {
-    await AsyncStorage.setItem('settings', JSON.stringify(props));
+  const _storeSettings = async (props) => {
+    await AsyncStorage.setItem("settings", JSON.stringify(props));
   };
 
-  _retrieveHistory = async () => {
-    const value = await AsyncStorage.getItem('history');
+  const _retrieveHistory = async () => {
+    const value = await AsyncStorage.getItem("history");
+
     if (value !== null) {
-      this.setState({
-        history: JSON.parse(value)
+      setState({
+        ...state,
+        history: JSON.parse(value),
       });
     }
   };
 
-  _retrieveSettings = async () => {
-    const value = await AsyncStorage.getItem('settings');
-    if (value !== null) {
-      this.setState(state => ({
-        saveHistory: value === 'true' ? true : state.saveHistory
-      }));
+  const _retrieveSettings = async () => {
+    const value = await AsyncStorage.getItem("settings");
 
-      if (value === 'true') this._retrieveHistory();
+    if (value) {
+      setState({
+        ...state,
+        saveHistory: value ? value : state.saveHistory,
+      });
+
+      if (value) _retrieveHistory();
     }
   };
 
-  _retrieveData = async () => {
-    const value = await AsyncStorage.getItem('themeColor');
-    if (value !== null) {
-      this.setState(state => ({
+  const _retrieveData = async () => {
+    const value = await AsyncStorage.getItem("themeColor");
+
+    if (value) {
+      setState({
+        ...state,
         themeColor: value,
-        theme: value === 'light' ? state.theme : theme.dark
-      }));
+        theme: value === "light" ? state.theme : theme.dark,
+      });
     }
   };
 
-  _saveData = () => {
-    this.setState(state => ({
-      saveHistory: !state.saveHistory
-    }));
+  const _saveData = () => {
+    setState({
+      ...state,
+      saveHistory: !state.saveHistory,
+    });
   };
 
-  _handleEvent = value => {
-    const {
-      firstSymbolOutput,
-      secondSymbolOutput,
-      secondNumberOutput
-    } = this.state;
-
+  const _handleEvent = (value) => {
+    const { firstSymbolOutput, secondSymbolOutput, secondNumberOutput } = state;
     if (
-      (!isNaN(value) && !secondNumberOutput.includes('%')) ||
-      (value === '.' && !secondNumberOutput.includes(value)) ||
-      (value === '%' && !secondNumberOutput.includes(value))
+      (typeof value === "number" && !secondNumberOutput.includes("%")) ||
+      (value === "." && !secondNumberOutput.includes(value)) ||
+      (value === "%" && !secondNumberOutput.includes(value))
     ) {
-      this._concatToNumberOutput(value);
+      _concatToNumberOutput(value);
     } else {
       switch (value) {
         case buttons[1][3]:
         case buttons[2][3]:
         case buttons[3][3]:
         case buttons[4][3]:
-          if (firstSymbolOutput !== '=' || secondSymbolOutput) {
-            this._evaluate();
-            this._concatToSymbolOutput(value);
+          if (firstSymbolOutput !== "=" || secondSymbolOutput) {
+            _evaluate();
+            _concatToSymbolOutput(value);
           }
           break;
 
         case buttons[0][0]:
-          this._setToClipboard();
+          _setToClipboard();
           break;
 
         case buttons[0][1]:
-          this._initOutput();
+          _initOutput();
           break;
 
         case buttons[0][2]:
           if (secondNumberOutput.length === 1) {
-            this.setState({
-              secondNumberOutput: initialOutput
-            });
+            setState({ ...state, secondNumberOutput: initialOutput });
           } else {
-            this._replaceLastIndex('');
+            _replaceLastIndex("");
           }
           break;
 
         case buttons[4][2]:
-          this._evaluate();
-          this.setState({
+          _evaluate();
+          setState({
+            ...state,
             firstSymbolOutput: value,
-            secondSymbolOutput: ''
+            secondSymbolOutput: "",
           });
           break;
       }
     }
   };
 
-  _concatToNumberOutput = value => {
-    const { secondNumberOutput } = this.state;
+  const _concatToNumberOutput = (value) => {
+    const { secondNumberOutput } = state;
+
     if (secondNumberOutput.length >= maxLength) {
-      this._showMessage(`Превышен максимум в ${maxLength} цифр!`);
+      _showMessage(`Превышен максимум в ${maxLength} цифр!`);
     } else {
       if (secondNumberOutput !== initialOutput) {
-        this.setState({
-          secondNumberOutput: secondNumberOutput + '' + value + ''
+        setState({
+          ...state,
+          secondNumberOutput: secondNumberOutput + "" + value + "",
         });
       } else {
-        this.setState({ secondNumberOutput: value + '' });
+        setState({ ...state, secondNumberOutput: value + "" });
       }
     }
   };
 
-  _concatToSymbolOutput = value => {
-    const { secondSymbolOutput } = this.state;
+  const _concatToSymbolOutput = (value) => {
+    const { secondSymbolOutput } = state;
+
     if (secondSymbolOutput) {
-      this.setState({
-        secondSymbolOutput: value + '',
-        firstSymbolOutput: ''
+      setState({
+        ...state,
+        secondSymbolOutput: value + "",
+        firstSymbolOutput: "",
       });
     } else {
-      this.setState({
-        secondSymbolOutput: '' + value,
-        firstSymbolOutput: ''
+      setState({
+        ...state,
+        secondSymbolOutput: "" + value,
+        firstSymbolOutput: "",
       });
     }
   };
 
-  _replaceLastIndex = value => {
-    const { secondNumberOutput } = this.state;
+  const _replaceLastIndex = (value) => {
+    const { secondNumberOutput } = state;
+
     let str1 = secondNumberOutput.replace(/.$/, value);
-    this.setState({
-      secondNumberOutput: str1
-    });
+    setState({ ...state, secondNumberOutput: str1 });
   };
 
-  _evaluate = () => {
+  const _evaluate = () => {
     const {
       firstNumberOutput,
       secondNumberOutput,
       secondSymbolOutput,
-      history
-    } = this.state;
+      history,
+    } = state;
 
     let aHistory = [...history];
-    let includesX = secondSymbolOutput.includes('x') ? true : false;
-    let includesPercent = secondNumberOutput.includes('%') ? true : false;
+    let includesX = secondSymbolOutput.includes("x");
+    let includesPercent = secondNumberOutput.includes("%");
     let dEval;
     let tEval;
 
@@ -211,14 +211,14 @@ export default class StateProvider extends Component {
           tEval =
             eval(
               firstNumberOutput +
-                secondSymbolOutput.replace(/[+]|[-]|[x]/g, '*') +
+                secondSymbolOutput.replace(/[+]|[-]|[x]/g, "*") +
                 secondNumberOutput.slice(0, -1)
             ) / 100;
 
           if (includesX) {
             aHistory.push([
               firstNumberOutput + secondSymbolOutput + secondNumberOutput,
-              tEval
+              tEval,
             ]);
           } else {
             dEval = eval(firstNumberOutput + secondSymbolOutput + tEval);
@@ -226,17 +226,18 @@ export default class StateProvider extends Component {
               firstNumberOutput +
                 secondSymbolOutput +
                 secondNumberOutput +
-                ' (' +
+                " (" +
                 tEval +
-                ')',
-              dEval
+                ")",
+              dEval,
             ]);
           }
 
-          this.setState({
+          setState({
+            ...state,
             firstNumberOutput: includesX ? tEval : dEval,
             secondNumberOutput: initialOutput,
-            history: aHistory
+            history: aHistory,
           });
         } else {
           if (
@@ -245,93 +246,93 @@ export default class StateProvider extends Component {
           ) {
             dEval = eval(
               firstNumberOutput +
-                this._convertToMathExpression(secondSymbolOutput) +
+                _convertToMathExpression(secondSymbolOutput) +
                 secondNumberOutput
             );
 
             aHistory.push([
               firstNumberOutput + secondSymbolOutput + secondNumberOutput,
-              dEval
+              dEval,
             ]);
 
-            this.setState({
+            setState({
+              ...state,
               firstNumberOutput: dEval,
               secondNumberOutput: initialOutput,
-              history: aHistory
+              history: aHistory,
             });
           } else {
-            this.setState({
+            setState({
+              ...state,
               firstNumberOutput: secondNumberOutput,
-              secondNumberOutput: initialOutput
+              secondNumberOutput: initialOutput,
             });
           }
         }
       }
     } catch (exception) {
-      this._showMessage(`${exception}`);
+      _showMessage(`${exception}`);
     }
   };
 
-  _convertToMathExpression = value => {
+  const _convertToMathExpression = (value) => {
     let strTemp = value.replace(
-      new RegExp(this._escapeRegExp(buttons[1][3]), 'g'),
-      '/'
+      new RegExp(_escapeRegExp(buttons[1][3]), "g"),
+      "/"
     );
     strTemp = strTemp.replace(
-      new RegExp(this._escapeRegExp(buttons[2][3]), 'g'),
-      '*'
+      new RegExp(_escapeRegExp(buttons[2][3]), "g"),
+      "*"
     );
     return strTemp;
   };
 
-  _escapeRegExp = str => {
-    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
+  const _escapeRegExp = (str) => {
+    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
   };
 
-  _initOutput = () => {
-    this.setState({
-      firstSymbolOutput: '',
+  const _initOutput = () => {
+    setState({
+      ...state,
+      firstSymbolOutput: "",
       firstNumberOutput: initialOutput,
-      secondSymbolOutput: '',
-      secondNumberOutput: initialOutput
+      secondSymbolOutput: "",
+      secondNumberOutput: initialOutput,
     });
   };
 
-  _clearHistory = () => {
-    this.setState({
-      history: []
-    });
+  const _clearHistory = () => {
+    setState({ ...state, history: [] });
   };
 
-  _setToClipboard = () => {
-    const { firstNumberOutput } = this.state;
+  const _setToClipboard = () => {
+    const { firstNumberOutput } = state;
     const clipboard = firstNumberOutput.toString();
     Clipboard.setString(clipboard);
-    this._showMessage(`Сохранено в буфер: ${clipboard}`);
+    _showMessage(`Сохранено в буфер: ${clipboard}`);
   };
 
-  _showMessage = message => {
-    this.setState({ messageVisible: true, message: message }, () => {
-      setTimeout(() => {
-        this.setState({ messageVisible: false });
-      }, 3000);
+  const _showMessage = (message) => {
+    setState({ ...state, messageVisible: true, message: message });
+
+    setTimeout(() => {
+      setState({ ...state, messageVisible: false });
+    }, 3000);
+  };
+
+  const _showSettings = () => {
+    setState({ ...state, settingsVisible: !state.settingsVisible });
+  };
+
+  const _changeThemeColor = () => {
+    setState({
+      ...state,
+      themeColor: state.themeColor === "dark" ? "light" : "dark",
+      theme: state.theme === theme.light ? theme.dark : theme.light,
     });
   };
 
-  _showSettings = () => {
-    this.setState({
-      settingsVisible: !this.state.settingsVisible
-    });
-  };
-
-  _changeThemeColor = () => {
-    this.setState(state => ({
-      themeColor: state.themeColor === 'dark' ? 'light' : 'dark',
-      theme: state.theme === theme.light ? theme.dark : theme.light
-    }));
-  };
-
-  _styledButtons = (rowIndex, colIndex) => {
+  const _styledButtons = (rowIndex, colIndex) => {
     if (rowIndex === 0 && colIndex === 3) return styles.numeralStyle;
     if (rowIndex === 1 && colIndex === 3) return styles.numeralStyle;
     if (rowIndex === 2 && colIndex === 3) return styles.numeralStyle;
@@ -345,34 +346,31 @@ export default class StateProvider extends Component {
     if (rowIndex === 0 && colIndex === 2) return styles.actionStyle;
   };
 
-  render() {
-    return (
-      <StateContext.Provider
-        value={{
-          firstSymbolOutput: this.state.firstSymbolOutput,
-          firstNumberOutput: this.state.firstNumberOutput,
-          secondSymbolOutput: this.state.secondSymbolOutput,
-          secondNumberOutput: this.state.secondNumberOutput,
-          history: this.state.history,
-          messageVisible: this.state.messageVisible,
-          settingsVisible: this.state.settingsVisible,
-          message: this.state.message,
-          themeColor: this.state.themeColor,
-          theme: this.state.theme,
-          styles: this.state.styles,
-          buttons: this.state.buttons,
-          saveHistory: this.state.saveHistory,
-          _showSettings: this._showSettings,
-          _saveData: this._saveData,
-          _changeThemeColor: this._changeThemeColor,
-          _clearHistory: this._clearHistory,
-          _showSettings: this._showSettings,
-          _handleEvent: this._handleEvent,
-          _styledButtons: this._styledButtons
-        }}
-      >
-        {this.props.children}
-      </StateContext.Provider>
-    );
-  }
-}
+  return (
+    <StateContext.Provider
+      value={{
+        firstSymbolOutput: state.firstSymbolOutput,
+        firstNumberOutput: state.firstNumberOutput,
+        secondSymbolOutput: state.secondSymbolOutput,
+        secondNumberOutput: state.secondNumberOutput,
+        history: state.history,
+        messageVisible: state.messageVisible,
+        settingsVisible: state.settingsVisible,
+        message: state.message,
+        themeColor: state.themeColor,
+        theme: state.theme,
+        styles: state.styles,
+        buttons: state.buttons,
+        saveHistory: state.saveHistory,
+        _showSettings: _showSettings,
+        _saveData: _saveData,
+        _changeThemeColor: _changeThemeColor,
+        _clearHistory: _clearHistory,
+        _handleEvent: _handleEvent,
+        _styledButtons: _styledButtons,
+      }}
+    >
+      {children}
+    </StateContext.Provider>
+  );
+};

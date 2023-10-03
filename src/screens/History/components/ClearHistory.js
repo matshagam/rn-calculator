@@ -1,27 +1,25 @@
-import React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import React, { useContext } from "react";
+import { TouchableOpacity, Text } from "react-native";
 
-import { StateContext } from '../../../store/StateProvider';
+import { StateContext } from "../../../store/StateProvider";
 
 export const ClearHistory = () => {
+  const { _clearHistory, theme, styles, history } = useContext(StateContext);
+
   return (
-    <StateContext.Consumer>
-      {({ _clearHistory, theme, styles, history }) => (
-        <TouchableOpacity
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          transparent
-          onPress={() => _clearHistory()}
-        >
-          <Text
-            style={[
-              styles.buttonEmptyHistoryText,
-              { color: theme.secondaryColorTxt }
-            ]}
-          >
-            {history.length !== 0 ? 'УДАЛИТЬ ИСТОРИЮ' : null}
-          </Text>
-        </TouchableOpacity>
-      )}
-    </StateContext.Consumer>
+    <TouchableOpacity
+      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+      transparent
+      onPress={() => _clearHistory()}
+    >
+      <Text
+        style={[
+          styles.buttonEmptyHistoryText,
+          { color: theme.secondaryColorTxt },
+        ]}
+      >
+        {history.length !== 0 ? "УДАЛИТЬ ИСТОРИЮ" : null}
+      </Text>
+    </TouchableOpacity>
   );
 };

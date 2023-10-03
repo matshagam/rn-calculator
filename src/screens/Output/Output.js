@@ -1,20 +1,18 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useContext } from "react";
+import { View } from "react-native";
 
-import { FirstOutput } from './components/firstOutput';
-import { SecondOutput } from './components/secondOutput';
+import { FirstOutput } from "./components/firstOutput";
+import { SecondOutput } from "./components/secondOutput";
 
-import { StateContext } from '../../store/StateProvider';
+import { StateContext } from "../../store/StateProvider";
 
 export const Output = () => {
+  const { styles } = useContext(StateContext);
+
   return (
-    <StateContext.Consumer>
-      {({ styles }) => (
-        <View style={styles.contOutput}>
-          <FirstOutput />
-          <SecondOutput />
-        </View>
-      )}
-    </StateContext.Consumer>
+    <View style={styles.contOutput}>
+      <FirstOutput />
+      <SecondOutput />
+    </View>
   );
 };

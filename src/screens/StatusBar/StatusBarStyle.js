@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useContext } from "react";
 
-import { StatusBar } from 'react-native';
-import { StateContext } from '../../store/StateProvider';
+import { StatusBar } from "react-native";
+import { StateContext } from "../../store/StateProvider";
 
 export const StatusBarStyle = () => {
+  const { themeColor } = useContext(StateContext);
+
   return (
-    <StateContext.Consumer>
-      {({ themeColor }) => (
-        <StatusBar
-          barStyle={themeColor === 'light' ? 'dark-content' : 'light-content'}
-          translucent
-        />
-      )}
-    </StateContext.Consumer>
+    <StatusBar
+      barStyle={themeColor === "light" ? "dark-content" : "light-content"}
+      translucent
+    />
   );
 };
