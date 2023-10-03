@@ -6,7 +6,7 @@ import { StateContext } from "../../../store/StateProvider";
 export const SecondOutput = () => {
   const { secondSymbolOutput, secondNumberOutput, styles, themeColor, theme } =
     useContext(StateContext);
-  console.log("❗", { secondNumberOutput });
+  console.log("❗", { secondSymbolOutput, secondNumberOutput });
   return (
     <View
       style={[

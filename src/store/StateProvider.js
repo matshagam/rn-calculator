@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import Clipboard from "@react-native-community/clipboard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useColorScheme } from "react-native";
 
 import {
   buttons,
@@ -13,6 +14,8 @@ import {
 export const StateContext = createContext();
 
 export default ({ children }) => {
+  const colorScheme = useColorScheme();
+
   const [state, setState] = useState({
     firstSymbolOutput: "",
     firstNumberOutput: initialOutput,
@@ -23,8 +26,8 @@ export default ({ children }) => {
     messageVisible: false,
     settingsVisible: false,
     message: "",
-    themeColor: "light",
-    theme: theme.light,
+    themeColor: colorScheme,
+    theme: theme[colorScheme],
     styles: styles,
     buttons: buttons,
   });
@@ -40,11 +43,13 @@ export default ({ children }) => {
 
   useEffect(() => {
     _storeSettings(state.saveHistory);
+  }, [state.saveHistory]);
 
+  useEffect(() => {
     if (state.saveHistory) {
       _storeHistory(state.history);
     }
-  }, [state.saveHistory, state.history]);
+  }, [state.history]);
 
   const _storeHistory = async (props) => {
     await AsyncStorage.setItem("history", JSON.stringify(props));
@@ -61,7 +66,7 @@ export default ({ children }) => {
   const _retrieveHistory = async () => {
     const value = await AsyncStorage.getItem("history");
 
-    if (value !== null) {
+    if (value) {
       setState({
         ...state,
         history: JSON.parse(value),
@@ -102,6 +107,7 @@ export default ({ children }) => {
   };
 
   const _handleEvent = (value) => {
+    console.log("❗_handleEvent", { value });
     const { firstSymbolOutput, secondSymbolOutput, secondNumberOutput } = state;
     if (
       (typeof value === "number" && !secondNumberOutput.includes("%")) ||
@@ -151,7 +157,7 @@ export default ({ children }) => {
 
   const _concatToNumberOutput = (value) => {
     const { secondNumberOutput } = state;
-
+    console.log("❗_concatToNumberOutput", { value, secondNumberOutput });
     if (secondNumberOutput.length >= maxLength) {
       _showMessage(`Превышен максимум в ${maxLength} цифр!`);
     } else {
@@ -168,7 +174,7 @@ export default ({ children }) => {
 
   const _concatToSymbolOutput = (value) => {
     const { secondSymbolOutput } = state;
-
+    console.log("❗_concatToSymbolOutput", { secondSymbolOutput, value });
     if (secondSymbolOutput) {
       setState({
         ...state,
