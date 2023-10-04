@@ -17,13 +17,13 @@ export const Settings = () => {
     useContext(ThemeContext);
 
   const historySaved = {
-    ru_RU: isHistorySaved ? "История сохраняется" : "История не сохраняется",
-    en_US: isHistorySaved ? "The history is saved" : "The history is not saved",
+    ru_RU: `История ${isHistorySaved ? "" : "не"} сохраняется`,
+    en_US: `The history is ${isHistorySaved ? "" : "not"} saved"`,
   };
 
   const themeMode = {
-    ru_RU: themeColor === "light" ? "Дневной режим" : "Ночной режим",
-    en_US: themeColor === "light" ? "Day mode" : "Night mode",
+    ru_RU: `${themeColor === "light" ? "Дневной" : "Ночной"}  режим`,
+    en_US: `${themeColor === "light" ? "Day" : "Night"} mode`,
   };
 
   const title = {
