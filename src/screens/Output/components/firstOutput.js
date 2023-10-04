@@ -20,7 +20,7 @@ export const FirstOutput = () => {
     } else {
       Animated.spring(translateAnim, {
         toValue: 70,
-        duration: 300,
+        duration: 100,
         useNativeDriver: true,
       }).start();
     }
