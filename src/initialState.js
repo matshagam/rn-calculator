@@ -8,7 +8,7 @@ import {
 
 export const width = Dimensions.get("window").width;
 
-export const deviceLanguage =
+export const sysLang =
   Platform.OS === "ios"
     ? NativeModules.SettingsManager.settings.AppleLocale
     : NativeModules.I18nManager.localeIdentifier;
@@ -19,19 +19,14 @@ const lang = {
 };
 
 export const buttons = [
-  [
-    lang[deviceLanguage][0],
-    lang[deviceLanguage][1],
-    lang[deviceLanguage][2],
-    "%",
-  ],
-  [7, 8, 9, " ÷ "],
-  [4, 5, 6, " x "],
-  [1, 2, 3, " + "],
-  [0, ".", " = ", " - "],
+  [lang[sysLang][0], lang[sysLang][1], lang[sysLang][2], "%"],
+  [7, 8, 9, "÷"],
+  [4, 5, 6, "x"],
+  [1, 2, 3, "+"],
+  [0, ".", "=", "-"],
 ];
 
-export const initialOutput = "0";
+export const initialOutput = "";
 export const maxLength = 17;
 
 export const theme = {
@@ -95,7 +90,7 @@ export const styles = StyleSheet.create({
   txtResult: {
     color: "#27ae60",
     fontFamily: "Helvetica-Light",
-    fontSize: 13,
+    fontSize: 30,
   },
   historyCont: {
     flex: 1,

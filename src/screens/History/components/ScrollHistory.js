@@ -1,11 +1,11 @@
 import React, { useContext, useRef } from "react";
-import { ScrollView, View, Text } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity } from "react-native";
 
 import { StateContext } from "../../../store/StateProvider";
 import { ThemeContext } from "../../../store/ThemeProvider";
 
 export const ScrollHistory = () => {
-  const { history } = useContext(StateContext);
+  const { history, _handleEvent } = useContext(StateContext);
   const { theme, styles } = useContext(ThemeContext);
   const scrollViewRef = useRef();
 
@@ -33,9 +33,14 @@ export const ScrollHistory = () => {
                 </Text>
               </View>
             ) : (
-              <View key={index} style={styles.resultCont}>
+              <TouchableOpacity
+                transparent
+                key={index}
+                style={styles.resultCont}
+                onPress={() => _handleEvent(thisHistory)}
+              >
                 <Text style={styles.txtResult}>{"= " + thisHistory}</Text>
-              </View>
+              </TouchableOpacity>
             );
           })}
         </View>

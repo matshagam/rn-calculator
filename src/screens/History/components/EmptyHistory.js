@@ -6,7 +6,7 @@ import { StateContext } from "../../../store/StateProvider";
 
 export const EmptyHistory = () => {
   const { theme, styles } = useContext(ThemeContext);
-  const { deviceLanguage } = useContext(StateContext);
+  const { sysLang } = useContext(StateContext);
 
   const lang = {
     ru_RU: "Нет истории вычислений",
@@ -18,7 +18,7 @@ export const EmptyHistory = () => {
       <Text
         style={[styles.txtEmptyHistory, { color: theme.secondaryColorTxt }]}
       >
-        {lang[deviceLanguage]}
+        {lang[sysLang]}
       </Text>
     </View>
   );

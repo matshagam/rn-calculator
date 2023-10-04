@@ -5,7 +5,7 @@ import { StateContext } from "../../../store/StateProvider";
 import { ThemeContext } from "../../../store/ThemeProvider";
 
 export const ClearHistory = () => {
-  const { _clearHistory, history, deviceLanguage } = useContext(StateContext);
+  const { _clearHistory, history, sysLang } = useContext(StateContext);
   const { theme, styles } = useContext(ThemeContext);
 
   const lang = {
@@ -25,7 +25,7 @@ export const ClearHistory = () => {
           { color: theme.secondaryColorTxt },
         ]}
       >
-        {history.length !== 0 ? lang[deviceLanguage] : null}
+        {history.length !== 0 ? lang[sysLang] : null}
       </Text>
     </TouchableOpacity>
   );

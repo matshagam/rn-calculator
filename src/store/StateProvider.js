@@ -2,28 +2,23 @@ import React, { createContext, useEffect, useState } from "react";
 import Clipboard from "@react-native-community/clipboard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import {
-  buttons,
-  deviceLanguage,
-  initialOutput,
-  maxLength,
-} from "../initialState";
+import { buttons, sysLang, initialOutput, maxLength } from "../initialState";
+import { isNumeric } from "../utils";
 
 export const StateContext = createContext();
 
 export default ({ children }) => {
   const [state, setState] = useState({
     firstSymbolOutput: "",
-    firstNumberOutput: initialOutput,
-    secondSymbolOutput: "",
-    secondNumberOutput: initialOutput,
+    firstNumberOutput: "",
+    secondNumberOutput: "",
     history: [],
     isHistorySaved: false,
     isMessageVisible: false,
     isSettingsVisible: false,
     message: "",
     buttons: buttons,
-    deviceLanguage: deviceLanguage,
+    sysLang: sysLang,
   });
 
   useEffect(() => {
@@ -80,203 +75,131 @@ export default ({ children }) => {
   };
 
   const _handleEvent = (value) => {
-    console.log("❗_handleEvent", { value });
-    const { firstSymbolOutput, secondSymbolOutput, secondNumberOutput } = state;
-    if (
-      (!isNaN(value) && !secondNumberOutput.includes("%")) ||
-      (value === "." && !secondNumberOutput.includes(value)) ||
-      (value === "%" && !secondNumberOutput.includes(value))
-    ) {
-      _concatToNumberOutput(value);
-    } else {
-      switch (value) {
-        case buttons[1][3]:
-        case buttons[2][3]:
-        case buttons[3][3]:
-        case buttons[4][3]:
-          if (firstSymbolOutput !== "=" || secondSymbolOutput) {
-            _evaluate();
-            _concatToSymbolOutput(value);
-          }
-          break;
+    const { firstNumberOutput, secondNumberOutput, history } = state;
+    let sum, dEval, tEval, toEval, temp;
 
-        case buttons[0][0]:
-          _setToClipboard();
-          break;
+    const last = secondNumberOutput.slice(-1);
 
-        case buttons[0][1]:
-          _initOutput();
-          break;
+    if (!isNumeric(last) && value === last) return;
 
-        case buttons[0][2]:
-          if (secondNumberOutput.length === 1) {
-            setState({ ...state, secondNumberOutput: initialOutput });
-          } else {
-            _replaceLastIndex("");
-          }
-          break;
+    const isPercent = /[%]/.test(last);
+    const isExist = /[+]|[-]/.test(secondNumberOutput);
+    const isDotNotExist = !/[+].*[.]/.test(secondNumberOutput);
 
-        case buttons[4][2]:
-          _evaluate();
-          setState({
-            ...state,
-            firstSymbolOutput: value,
-            secondSymbolOutput: "",
-          });
-          break;
-      }
-    }
-  };
-
-  const _concatToNumberOutput = (value) => {
-    const { secondNumberOutput } = state;
-    console.log("❗_concatToNumberOutput", { value, secondNumberOutput });
     if (secondNumberOutput.length >= maxLength) {
       _showMessage(`Превышен максимум в ${maxLength} цифр!`);
-    } else {
-      if (secondNumberOutput !== initialOutput) {
+    }
+
+    switch (value) {
+      case buttons[0][0]:
+        _setToClipboard();
+
+        break;
+
+      case buttons[0][1]:
+        _initOutput();
+
+        break;
+
+      case buttons[0][2]:
         setState({
           ...state,
-          secondNumberOutput: secondNumberOutput + "" + value + "",
+          secondNumberOutput:
+            secondNumberOutput.length === 1
+              ? initialOutput
+              : secondNumberOutput.slice(0, -1),
         });
-      } else {
-        setState({ ...state, secondNumberOutput: value + "" });
-      }
-    }
-  };
 
-  const _concatToSymbolOutput = (value) => {
-    const { secondSymbolOutput } = state;
-    console.log("❗_concatToSymbolOutput", { secondSymbolOutput, value });
-    if (secondSymbolOutput) {
-      setState({
-        ...state,
-        secondSymbolOutput: value + "",
-        firstSymbolOutput: "",
-      });
-    } else {
-      setState({
-        ...state,
-        secondSymbolOutput: "" + value,
-        firstSymbolOutput: "",
-      });
-    }
-  };
+        break;
 
-  const _replaceLastIndex = (value) => {
-    const { secondNumberOutput } = state;
-
-    let str1 = secondNumberOutput.replace(/.$/, value);
-    setState({ ...state, secondNumberOutput: str1 });
-  };
-
-  const _evaluate = () => {
-    const {
-      firstNumberOutput,
-      secondNumberOutput,
-      secondSymbolOutput,
-      history,
-    } = state;
-
-    let aHistory = [...history];
-    let includesX = secondSymbolOutput.includes("x");
-    let includesPercent = secondNumberOutput.includes("%");
-    let dEval;
-    let tEval;
-
-    try {
-      if (secondNumberOutput !== initialOutput) {
-        if (includesPercent) {
-          tEval =
-            eval(
-              firstNumberOutput +
-                secondSymbolOutput.replace(/[+]|[-]|[x]/g, "*") +
-                secondNumberOutput.slice(0, -1)
-            ) / 100;
-
-          if (includesX) {
-            aHistory.push([
-              firstNumberOutput + secondSymbolOutput + secondNumberOutput,
-              tEval,
-            ]);
-          } else {
-            dEval = eval(firstNumberOutput + secondSymbolOutput + tEval);
-            aHistory.push([
-              firstNumberOutput +
-                secondSymbolOutput +
-                secondNumberOutput +
-                " (" +
-                tEval +
-                ")",
-              dEval,
-            ]);
-          }
+      case buttons[0][3]:
+        if (isExist && isNumeric(last)) {
+          dEval = eval(secondNumberOutput);
+          tEval = dEval / 100;
+          sum = dEval + tEval;
 
           setState({
             ...state,
-            firstNumberOutput: includesX ? tEval : dEval,
-            secondNumberOutput: initialOutput,
-            history: aHistory,
+            firstNumberOutput: sum,
+            firstSymbolOutput: buttons[4][2],
+            secondNumberOutput: secondNumberOutput + value,
+            history,
           });
-        } else {
-          if (
-            firstNumberOutput !== initialOutput &&
-            isNaN(secondSymbolOutput)
-          ) {
-            dEval = eval(
-              firstNumberOutput +
-                _convertToMathExpression(secondSymbolOutput) +
-                secondNumberOutput
-            );
 
-            aHistory.push([
-              firstNumberOutput + secondSymbolOutput + secondNumberOutput,
-              dEval,
-            ]);
-
-            setState({
-              ...state,
-              firstNumberOutput: dEval,
-              secondNumberOutput: initialOutput,
-              history: aHistory,
-            });
-          } else {
-            setState({
-              ...state,
-              firstNumberOutput: secondNumberOutput,
-              secondNumberOutput: initialOutput,
-            });
-          }
+          history.push([secondNumberOutput + " (" + tEval + ")", sum]);
         }
-      }
-    } catch (exception) {
-      _showMessage(`${exception}`);
+
+        break;
+
+      case buttons[1][3]:
+      case buttons[2][3]:
+      case buttons[3][3]:
+      case buttons[4][3]:
+        if (isNumeric(last)) {
+          toEval = secondNumberOutput.replace(/÷/, "/").replace(/x/, "*");
+          dEval = eval(toEval);
+
+          setState({
+            ...state,
+            secondNumberOutput: dEval + value,
+            firstNumberOutput: dEval,
+            firstSymbolOutput: buttons[4][2],
+          });
+
+          history.push([secondNumberOutput, dEval]);
+        } else {
+          temp = isPercent
+            ? firstNumberOutput + value
+            : secondNumberOutput.slice(0, -1) + value;
+
+          setState({
+            ...state,
+            secondNumberOutput: temp,
+          });
+        }
+
+        break;
+
+      case buttons[4][1]:
+        if (isNumeric(last) && isDotNotExist) {
+          setState({
+            ...state,
+            secondNumberOutput: secondNumberOutput + value,
+          });
+        }
+        break;
+
+      case buttons[4][2]:
+        if (isNumeric(last)) {
+          toEval = secondNumberOutput.replace(/÷/, "/").replace(/x/, "*");
+          dEval = eval(toEval);
+
+          setState({
+            ...state,
+            firstNumberOutput: dEval,
+            firstSymbolOutput: buttons[4][2],
+          });
+
+          history.push([secondNumberOutput, dEval]);
+        }
+        break;
+
+      default:
+        setState({
+          ...state,
+          secondNumberOutput: secondNumberOutput + value,
+        });
+
+        break;
     }
-  };
-
-  const _convertToMathExpression = (value) => {
-    let strTemp = value.replace(
-      new RegExp(_escapeRegExp(buttons[1][3]), "g"),
-      "/"
-    );
-    strTemp = strTemp.replace(
-      new RegExp(_escapeRegExp(buttons[2][3]), "g"),
-      "*"
-    );
-    return strTemp;
-  };
-
-  const _escapeRegExp = (str) => {
-    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
   };
 
   const _initOutput = () => {
     setState({
       ...state,
       firstSymbolOutput: "",
-      firstNumberOutput: initialOutput,
-      secondSymbolOutput: "",
-      secondNumberOutput: initialOutput,
+      firstNumberOutput: "",
+      secondNumberOutput: "",
     });
   };
 
@@ -286,6 +209,7 @@ export default ({ children }) => {
 
   const _setToClipboard = () => {
     const { firstNumberOutput } = state;
+
     const clipboard = firstNumberOutput.toString();
     Clipboard.setString(clipboard);
     _showMessage(`Сохранено в буфер: ${clipboard}`);

@@ -4,11 +4,9 @@ import { StateContext } from "../../../store/StateProvider";
 import { ThemeContext } from "../../../store/ThemeProvider";
 
 export const FirstOutput = () => {
-  const { firstSymbolOutput = "", firstNumberOutput = "" } =
-    useContext(StateContext);
+  const { firstSymbolOutput, firstNumberOutput } = useContext(StateContext);
   const { styles, themeColor, theme } = useContext(ThemeContext);
-  const [translateAnim] = useState(new Animated.Value(70));
-  console.log("❗", { firstSymbolOutput, firstNumberOutput });
+  const [translateAnim] = useState(new Animated.Value(140));
 
   useEffect(() => {
     if (firstSymbolOutput) {
@@ -19,7 +17,7 @@ export const FirstOutput = () => {
       }).start();
     } else {
       Animated.spring(translateAnim, {
-        toValue: 70,
+        toValue: 140,
         duration: 100,
         useNativeDriver: true,
       }).start();

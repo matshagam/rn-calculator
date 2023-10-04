@@ -7,7 +7,7 @@ import { ThemeContext } from "../../store/ThemeProvider";
 
 export const Settings = () => {
   const {
-    deviceLanguage,
+    sysLang,
     isSettingsVisible,
     isHistorySaved,
     _showSettings,
@@ -55,7 +55,7 @@ export const Settings = () => {
               marginBottom: 20,
             }}
           >
-            {title[deviceLanguage]}
+            {title[sysLang]}
           </Text>
           <View
             style={{
@@ -71,7 +71,7 @@ export const Settings = () => {
                 color: theme.secondaryColorTxt,
               }}
             >
-              {historySaved[deviceLanguage]}
+              {historySaved[sysLang]}
             </Text>
             <TouchableOpacity
               style={{ opacity: 0.5, width: 23, alignItems: "center" }}
@@ -101,7 +101,7 @@ export const Settings = () => {
                 color: theme.secondaryColorTxt,
               }}
             >
-              {themeMode[deviceLanguage]}
+              {themeMode[sysLang]}
             </Text>
             <TouchableOpacity
               style={{ opacity: 0.5, width: 23, alignItems: "center" }}
