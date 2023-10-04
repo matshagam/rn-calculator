@@ -13,7 +13,9 @@ export const SecondOutput = () => {
     <View
       style={[
         styles.placeHolderOutput,
-        { backgroundColor: themeColor === "dark" ? "#000" : "#dedede" },
+        {
+          backgroundColor: themeColor === "dark" ? "#000" : "#dedede",
+        },
       ]}
     >
       <Text style={[styles.txtDefaultOutput, { color: theme.primaryColorTxt }]}>

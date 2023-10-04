@@ -1,7 +1,6 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 import { styles, theme } from "../initialState";
 import { useColorScheme } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const ThemeContext = createContext();
 
@@ -12,30 +11,6 @@ export default ({ children }) => {
     theme: theme[colorScheme],
     styles: styles,
   });
-
-  useEffect(() => {
-    _retrieveData();
-  }, []);
-
-  useEffect(() => {
-    _storeData(state.themeColor);
-  }, [state.themeColor]);
-
-  const _storeData = async (props) => {
-    await AsyncStorage.setItem("themeColor", props);
-  };
-
-  const _retrieveData = async () => {
-    const value = await AsyncStorage.getItem("themeColor");
-
-    if (value) {
-      setState({
-        ...state,
-        themeColor: value,
-        theme: value === "light" ? state.theme : theme.dark,
-      });
-    }
-  };
 
   const _changeThemeColor = () => {
     setState({
