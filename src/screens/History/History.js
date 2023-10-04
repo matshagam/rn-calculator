@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { View } from "react-native";
 import { ShowSettings } from "../Settings/components/ShowSettings";
-import { NightMode } from "../NightMode/NightMode";
 import { Message } from "./components/Message";
 import { ClearHistory } from "./components/ClearHistory";
 import { ScrollHistory } from "./components/ScrollHistory";
@@ -32,7 +31,6 @@ export const HistoryView = () => {
         >
           <View style={styles.buttonsLeftSide}>
             <ShowSettings />
-            <NightMode />
           </View>
           <ClearHistory />
         </View>

@@ -62,9 +62,7 @@ export default ({ children }) => {
   return (
     <ThemeContext.Provider
       value={{
-        themeColor: state.themeColor,
-        theme: state.theme,
-        styles: state.styles,
+        ...state,
         _changeThemeColor: _changeThemeColor,
         _styledButtons: _styledButtons,
       }}

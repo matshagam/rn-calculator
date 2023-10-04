@@ -18,9 +18,9 @@ export default ({ children }) => {
     secondSymbolOutput: "",
     secondNumberOutput: initialOutput,
     history: [],
-    saveHistory: false,
-    messageVisible: false,
-    settingsVisible: false,
+    isHistorySaved: false,
+    isMessageVisible: false,
+    isSettingsVisible: false,
     message: "",
     buttons: buttons,
     deviceLanguage: deviceLanguage,
@@ -31,11 +31,11 @@ export default ({ children }) => {
   }, []);
 
   useEffect(() => {
-    _storeSettings(state.saveHistory);
-  }, [state.saveHistory]);
+    _storeSettings(state.isHistorySaved);
+  }, [state.isHistorySaved]);
 
   useEffect(() => {
-    if (state.saveHistory) {
+    if (state.isHistorySaved) {
       _storeHistory(state.history);
     }
   }, [state.history]);
@@ -65,7 +65,7 @@ export default ({ children }) => {
     if (value) {
       setState({
         ...state,
-        saveHistory: value ? value : state.saveHistory,
+        isHistorySaved: value ? value : state.isHistorySaved,
       });
 
       if (value) _retrieveHistory();
@@ -75,7 +75,7 @@ export default ({ children }) => {
   const _saveData = () => {
     setState({
       ...state,
-      saveHistory: !state.saveHistory,
+      isHistorySaved: !state.isHistorySaved,
     });
   };
 
@@ -83,7 +83,7 @@ export default ({ children }) => {
     console.log("❗_handleEvent", { value });
     const { firstSymbolOutput, secondSymbolOutput, secondNumberOutput } = state;
     if (
-      (typeof value === "number" && !secondNumberOutput.includes("%")) ||
+      (!isNaN(value) && !secondNumberOutput.includes("%")) ||
       (value === "." && !secondNumberOutput.includes(value)) ||
       (value === "%" && !secondNumberOutput.includes(value))
     ) {
@@ -292,31 +292,21 @@ export default ({ children }) => {
   };
 
   const _showMessage = (message) => {
-    setState({ ...state, messageVisible: true, message: message });
+    setState({ ...state, isMessageVisible: true, message: message });
 
     setTimeout(() => {
-      setState({ ...state, messageVisible: false });
+      setState({ ...state, isMessageVisible: false });
     }, 3000);
   };
 
   const _showSettings = () => {
-    setState({ ...state, settingsVisible: !state.settingsVisible });
+    setState({ ...state, isSettingsVisible: !state.isSettingsVisible });
   };
 
   return (
     <StateContext.Provider
       value={{
-        firstSymbolOutput: state.firstSymbolOutput,
-        firstNumberOutput: state.firstNumberOutput,
-        secondSymbolOutput: state.secondSymbolOutput,
-        secondNumberOutput: state.secondNumberOutput,
-        history: state.history,
-        messageVisible: state.messageVisible,
-        settingsVisible: state.settingsVisible,
-        message: state.message,
-        buttons: state.buttons,
-        saveHistory: state.saveHistory,
-        deviceLanguage: state.deviceLanguage,
+        ...state,
         _showSettings: _showSettings,
         _saveData: _saveData,
         _clearHistory: _clearHistory,

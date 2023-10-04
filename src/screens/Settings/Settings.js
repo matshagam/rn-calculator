@@ -6,12 +6,33 @@ import { StateContext } from "../../store/StateProvider";
 import { ThemeContext } from "../../store/ThemeProvider";
 
 export const Settings = () => {
-  const { settingsVisible, saveHistory, _showSettings, _saveData } =
-    useContext(StateContext);
-  const { theme, styles } = useContext(ThemeContext);
+  const {
+    deviceLanguage,
+    isSettingsVisible,
+    isHistorySaved,
+    _showSettings,
+    _saveData,
+  } = useContext(StateContext);
+  const { theme, styles, themeColor, _changeThemeColor } =
+    useContext(ThemeContext);
+
+  const historySaved = {
+    ru_RU: isHistorySaved ? "История сохраняется" : "История не сохраняется",
+    en_US: isHistorySaved ? "The history is saved" : "The history is not saved",
+  };
+
+  const themeMode = {
+    ru_RU: themeColor === "light" ? "Дневной режим" : "Ночной режим",
+    en_US: themeColor === "light" ? "Day mode" : "Night mode",
+  };
+
+  const title = {
+    ru_RU: "Настройки",
+    en_US: "Settings",
+  };
 
   return (
-    <Modal animationType="slide" visible={settingsVisible}>
+    <Modal animationType="slide" visible={isSettingsVisible}>
       <View
         style={[
           styles.modalView,
@@ -34,7 +55,7 @@ export const Settings = () => {
               marginBottom: 20,
             }}
           >
-            НАСТРОЙКИ КАЛЬКУЛЯТОРА
+            {title[deviceLanguage]}
           </Text>
           <View
             style={{
@@ -50,7 +71,7 @@ export const Settings = () => {
                 color: theme.secondaryColorTxt,
               }}
             >
-              {saveHistory ? "История сохраняется" : "История не сохраняется"}
+              {historySaved[deviceLanguage]}
             </Text>
             <TouchableOpacity
               style={{ opacity: 0.5, width: 23, alignItems: "center" }}
@@ -62,7 +83,37 @@ export const Settings = () => {
               <Ionicons
                 size={23}
                 color={theme.secondaryColorTxt}
-                name={saveHistory ? "ios-cloud" : "ios-cloud-outline"}
+                name={isHistorySaved ? "ios-cloud" : "ios-cloud-outline"}
+              />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              width: "100%",
+              height: 40,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                color: theme.secondaryColorTxt,
+              }}
+            >
+              {themeMode[deviceLanguage]}
+            </Text>
+            <TouchableOpacity
+              style={{ opacity: 0.5, width: 23, alignItems: "center" }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              onPress={() => {
+                _changeThemeColor();
+              }}
+            >
+              <Ionicons
+                size={23}
+                name={themeColor === "light" ? "ios-moon" : "ios-sunny"}
+                color={theme.secondaryColorTxt}
               />
             </TouchableOpacity>
           </View>
