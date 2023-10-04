@@ -7,7 +7,6 @@ export const ThemeContext = createContext();
 
 export default ({ children }) => {
   const colorScheme = useColorScheme();
-
   const [state, setState] = useState({
     themeColor: colorScheme,
     theme: theme[colorScheme],
