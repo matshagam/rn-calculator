@@ -32,7 +32,7 @@ export const FirstOutput = () => {
         styles.placeHolderOutput,
         {
           backgroundColor: themeColor === "dark" ? "#000" : "#dedede",
-          transform: [{ translateY: translateAnim }],
+          transform: [{ translateY: translateAnim }, { perspective: 1000 }],
         },
       ]}
     >
