@@ -1,20 +1,21 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { ScrollView, View, Text } from "react-native";
 
 import { StateContext } from "../../../store/StateProvider";
+import { ThemeContext } from "../../../store/ThemeProvider";
 
 export const ScrollHistory = () => {
-  const { theme, styles, history } = useContext(StateContext);
+  const { history } = useContext(StateContext);
+  const { theme, styles } = useContext(ThemeContext);
+  const scrollViewRef = useRef();
 
   return (
     <ScrollView
-      style={{
-        marginTop: 25,
-      }}
-      ref={(ref) => (this.scrollView = ref)}
+      ref={scrollViewRef}
+      style={{ marginTop: 25 }}
       showsVerticalScrollIndicator={false}
       onContentSizeChange={() => {
-        this.scrollView.scrollToEnd({ animated: true });
+        scrollViewRef.current.scrollToEnd({ animated: true });
       }}
     >
       {Object.keys(history).map((key, i) => (

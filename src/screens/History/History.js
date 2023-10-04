@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
-import { View, Dimensions } from "react-native";
-export const width = Dimensions.get("window").width;
-
+import { View } from "react-native";
 import { ShowSettings } from "../Settings/components/ShowSettings";
 import { NightMode } from "../NightMode/NightMode";
 import { Message } from "./components/Message";
@@ -10,9 +8,11 @@ import { ScrollHistory } from "./components/ScrollHistory";
 import { EmptyHistory } from "./components/EmptyHistory";
 
 import { StateContext } from "../../store/StateProvider";
+import { ThemeContext } from "../../store/ThemeProvider";
 
 export const HistoryView = () => {
-  const { history, theme, styles } = useContext(StateContext);
+  const { history } = useContext(StateContext);
+  const { theme, styles } = useContext(ThemeContext);
 
   return (
     <View

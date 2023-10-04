@@ -1,21 +1,17 @@
 import React, { createContext, useEffect, useState } from "react";
 import Clipboard from "@react-native-community/clipboard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useColorScheme } from "react-native";
 
 import {
   buttons,
+  deviceLanguage,
   initialOutput,
   maxLength,
-  theme,
-  styles,
 } from "../initialState";
 
 export const StateContext = createContext();
 
 export default ({ children }) => {
-  const colorScheme = useColorScheme();
-
   const [state, setState] = useState({
     firstSymbolOutput: "",
     firstNumberOutput: initialOutput,
@@ -26,20 +22,13 @@ export default ({ children }) => {
     messageVisible: false,
     settingsVisible: false,
     message: "",
-    themeColor: colorScheme,
-    theme: theme[colorScheme],
-    styles: styles,
     buttons: buttons,
+    deviceLanguage: deviceLanguage,
   });
 
   useEffect(() => {
-    _retrieveData();
     _retrieveSettings();
   }, []);
-
-  useEffect(() => {
-    _storeData(state.themeColor);
-  }, [state.themeColor]);
 
   useEffect(() => {
     _storeSettings(state.saveHistory);
@@ -53,10 +42,6 @@ export default ({ children }) => {
 
   const _storeHistory = async (props) => {
     await AsyncStorage.setItem("history", JSON.stringify(props));
-  };
-
-  const _storeData = async (props) => {
-    await AsyncStorage.setItem("themeColor", props);
   };
 
   const _storeSettings = async (props) => {
@@ -84,18 +69,6 @@ export default ({ children }) => {
       });
 
       if (value) _retrieveHistory();
-    }
-  };
-
-  const _retrieveData = async () => {
-    const value = await AsyncStorage.getItem("themeColor");
-
-    if (value) {
-      setState({
-        ...state,
-        themeColor: value,
-        theme: value === "light" ? state.theme : theme.dark,
-      });
     }
   };
 
@@ -330,28 +303,6 @@ export default ({ children }) => {
     setState({ ...state, settingsVisible: !state.settingsVisible });
   };
 
-  const _changeThemeColor = () => {
-    setState({
-      ...state,
-      themeColor: state.themeColor === "dark" ? "light" : "dark",
-      theme: state.theme === theme.light ? theme.dark : theme.light,
-    });
-  };
-
-  const _styledButtons = (rowIndex, colIndex) => {
-    if (rowIndex === 0 && colIndex === 3) return styles.numeralStyle;
-    if (rowIndex === 1 && colIndex === 3) return styles.numeralStyle;
-    if (rowIndex === 2 && colIndex === 3) return styles.numeralStyle;
-    if (rowIndex === 3 && colIndex === 3) return styles.numeralStyle;
-    if (rowIndex === 4 && colIndex === 3) return styles.numeralStyle;
-
-    if (rowIndex === 4 && colIndex === 2) return styles.equallyStyle;
-
-    if (rowIndex === 0 && colIndex === 0) return styles.actionStyle;
-    if (rowIndex === 0 && colIndex === 1) return styles.actionStyle;
-    if (rowIndex === 0 && colIndex === 2) return styles.actionStyle;
-  };
-
   return (
     <StateContext.Provider
       value={{
@@ -363,17 +314,13 @@ export default ({ children }) => {
         messageVisible: state.messageVisible,
         settingsVisible: state.settingsVisible,
         message: state.message,
-        themeColor: state.themeColor,
-        theme: state.theme,
-        styles: state.styles,
         buttons: state.buttons,
         saveHistory: state.saveHistory,
+        deviceLanguage: state.deviceLanguage,
         _showSettings: _showSettings,
         _saveData: _saveData,
-        _changeThemeColor: _changeThemeColor,
         _clearHistory: _clearHistory,
         _handleEvent: _handleEvent,
-        _styledButtons: _styledButtons,
       }}
     >
       {children}

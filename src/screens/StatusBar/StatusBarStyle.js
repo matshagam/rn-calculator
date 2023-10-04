@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 
 import { StatusBar } from "react-native";
-import { StateContext } from "../../store/StateProvider";
+import { ThemeContext } from "../../store/ThemeProvider";
 
 export const StatusBarStyle = () => {
-  const { themeColor } = useContext(StateContext);
+  const { themeColor } = useContext(ThemeContext);
 
   return (
     <StatusBar

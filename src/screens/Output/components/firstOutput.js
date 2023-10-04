@@ -1,10 +1,12 @@
 import React, { useContext } from "react";
 import { Text, View } from "react-native";
 import { StateContext } from "../../../store/StateProvider";
+import { ThemeContext } from "../../../store/ThemeProvider";
 
 export const FirstOutput = () => {
-  const { firstSymbolOutput, firstNumberOutput, styles, themeColor, theme } =
+  const { firstSymbolOutput = "", firstNumberOutput = "" } =
     useContext(StateContext);
+  const { styles, themeColor, theme } = useContext(ThemeContext);
   console.log("❗", { firstSymbolOutput, firstNumberOutput });
   return (
     <View

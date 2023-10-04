@@ -4,10 +4,10 @@ import { View } from "react-native";
 import { FirstOutput } from "./components/firstOutput";
 import { SecondOutput } from "./components/secondOutput";
 
-import { StateContext } from "../../store/StateProvider";
+import { ThemeContext } from "../../store/ThemeProvider";
 
 export const Output = () => {
-  const { styles } = useContext(StateContext);
+  const { styles } = useContext(ThemeContext);
 
   return (
     <View style={styles.contOutput}>

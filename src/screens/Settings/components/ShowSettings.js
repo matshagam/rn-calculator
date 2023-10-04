@@ -3,9 +3,11 @@ import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { StateContext } from "../../../store/StateProvider";
+import { ThemeContext } from "../../../store/ThemeProvider";
 
 export const ShowSettings = () => {
-  const { _showSettings, theme } = useContext(StateContext);
+  const { _showSettings } = useContext(StateContext);
+  const { theme } = useContext(ThemeContext);
 
   return (
     <TouchableOpacity

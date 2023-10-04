@@ -1,9 +1,30 @@
-import { StyleSheet, Platform, Dimensions, StatusBar } from "react-native";
+import {
+  StyleSheet,
+  Platform,
+  Dimensions,
+  StatusBar,
+  NativeModules,
+} from "react-native";
 
 export const width = Dimensions.get("window").width;
 
+export const deviceLanguage =
+  Platform.OS === "ios"
+    ? NativeModules.SettingsManager.settings.AppleLocale
+    : NativeModules.I18nManager.localeIdentifier;
+
+const lang = {
+  ru_RU: ["СОХР", "ОЧИС", "УДАЛ"],
+  en_US: ["SAVE", "CLR", "DEL"],
+};
+
 export const buttons = [
-  ["СОХР", "ОЧИС", "УДАЛ", "%"],
+  [
+    lang[deviceLanguage][0],
+    lang[deviceLanguage][1],
+    lang[deviceLanguage][2],
+    "%",
+  ],
   [7, 8, 9, " ÷ "],
   [4, 5, 6, " x "],
   [1, 2, 3, " + "],

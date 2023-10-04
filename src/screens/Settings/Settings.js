@@ -3,16 +3,12 @@ import { Modal, View, TouchableOpacity, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { StateContext } from "../../store/StateProvider";
+import { ThemeContext } from "../../store/ThemeProvider";
 
 export const Settings = () => {
-  const {
-    settingsVisible,
-    theme,
-    styles,
-    saveHistory,
-    _showSettings,
-    _saveData,
-  } = useContext(StateContext);
+  const { settingsVisible, saveHistory, _showSettings, _saveData } =
+    useContext(StateContext);
+  const { theme, styles } = useContext(ThemeContext);
 
   return (
     <Modal animationType="slide" visible={settingsVisible}>

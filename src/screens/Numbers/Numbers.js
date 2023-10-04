@@ -1,10 +1,12 @@
 import React, { useContext } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { StateContext } from "../../store/StateProvider";
+import { ThemeContext } from "../../store/ThemeProvider";
 
 export const NumberButtons = () => {
-  const { buttons, theme, themeColor, styles, _handleEvent, _styledButtons } =
-    useContext(StateContext);
+  const { buttons, _handleEvent } = useContext(StateContext);
+  const { theme, themeColor, styles, _styledButtons } =
+    useContext(ThemeContext);
 
   return (
     <View style={[styles.contButtons, { backgroundColor: theme.primaryColor }]}>

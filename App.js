@@ -1,13 +1,16 @@
 import React from "react";
 
 import StateProvider from "./src/store/StateProvider";
+import ThemeProvider from "./src/store/ThemeProvider";
 import { Views } from "./src/screens/Views/Views";
 
 const App = () => {
   return (
-    <StateProvider>
-      <Views />
-    </StateProvider>
+    <ThemeProvider>
+      <StateProvider>
+        <Views />
+      </StateProvider>
+    </ThemeProvider>
   );
 };
 
