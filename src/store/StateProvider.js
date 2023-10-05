@@ -83,7 +83,7 @@ export default ({ children }) => {
     const isPercent = /[%]/.test(last);
     const isEachExist = /[+]|[-]/.test(calcNumber);
     const isAllExist = /[+]|[-]|[÷]|[x]/.test(calcNumber);
-    const isDotNotExist = !/[+].*[.]/.test(calcNumber);
+    const isDotNotExist = !/[+|-|x|÷].*[.]/.test(calcNumber);
 
     if (calcNumber.length >= maxLength) {
       _showMessage(`Превышен максимум в ${maxLength} цифр!`);
@@ -133,7 +133,7 @@ export default ({ children }) => {
       case buttons[4][3]:
         if (isNumeric(last)) {
           if (isAllExist) {
-            toEval = calcNumber.replace(/÷/, "/").replace(/x/, "*");
+            toEval = calcNumber.replace(/[÷]/, "/").replace(/[x]/, "*");
             dEval = eval(toEval);
             history.push([calcNumber, dEval]);
 
@@ -147,9 +147,11 @@ export default ({ children }) => {
             };
           }
         } else {
-          temp = isPercent
-            ? evalNumber + value
-            : calcNumber.slice(0, -1) + value;
+          temp = {
+            calcNumber: isPercent
+              ? evalNumber + value
+              : calcNumber.slice(0, -1) + value,
+          };
         }
 
         setState({ ...state, ...temp });
