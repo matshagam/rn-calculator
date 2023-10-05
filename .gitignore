@@ -10,3 +10,4 @@ npm-debug.*
 /package-lock.json
 /yarn.lock
 .idea
+/src/screens/Settings/.index.js.swp

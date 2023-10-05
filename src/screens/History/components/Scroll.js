@@ -12,7 +12,7 @@ export default () => {
   return (
     <ScrollView
       ref={scrollViewRef}
-      style={{ marginTop: 25, flexDirection: "column-reverse" }}
+      style={{ marginTop: 25 }}
       showsVerticalScrollIndicator={false}
       onContentSizeChange={() => {
         scrollViewRef.current.scrollToEnd({ animated: true });

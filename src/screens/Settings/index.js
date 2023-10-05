@@ -1,10 +1,12 @@
 import React, { useContext } from "react";
-import { Modal, View, TouchableOpacity, Text } from "react-native";
+import { Image, Modal, View, TouchableOpacity, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { StateContext } from "../../store/StateProvider";
 import { ThemeContext } from "../../store/ThemeProvider";
 import Separator from "./components/Separator";
+import DONATE from "../../../assets/donate.png";
+import { copyToClipboard } from "../../utils";
 
 export default () => {
   const {
@@ -56,10 +58,10 @@ export default () => {
         >
           <Text
             style={{
-              color: theme.secondaryColorTxt,
-              alignSelf: "center",
+              color: theme.primaryColorTxt,
               fontSize: 20,
               marginBottom: 20,
+              fontWeight: "500",
             }}
           >
             {title[sysLang]}
@@ -153,6 +155,49 @@ export default () => {
                 name={themeColor === "light" ? "ios-moon" : "ios-sunny"}
                 color={theme.secondaryColorTxt}
               />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              display: "flex",
+              rowGap: 10,
+              flex: 1,
+              justifyContent: "flex-end",
+              paddingBottom: 20,
+            }}
+          >
+            <View
+              style={{
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "#fff",
+                borderRadius: 3,
+                padding: 12,
+              }}
+            >
+              <Image source={DONATE} />
+            </View>
+            <TouchableOpacity
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                columnGap: 10,
+                alignItems: "center",
+                justifyContent: "space-between",
+                backgroundColor: "#f2f3f7",
+                paddingHorizontal: 12,
+                paddingVertical: 10,
+                borderRadius: 3,
+              }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              onPress={() => {
+                copyToClipboard("https://pay.mysbertips.ru/32127605");
+              }}
+            >
+              <Text style={{ color: "#27ae60", fontSize: 16 }}>
+                https://pay.mysbertips.ru/32127605
+              </Text>
+              <Ionicons name="ios-copy-outline" size={24} color="black" />
             </TouchableOpacity>
           </View>
         </View>

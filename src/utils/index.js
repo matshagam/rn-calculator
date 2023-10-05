@@ -1,3 +1,9 @@
+import * as Clipboard from "expo-clipboard";
+
 const isNumeric = (n) => !isNaN(n);
 
-export { isNumeric };
+const copyToClipboard = async ({ text }) => {
+  await Clipboard.setStringAsync(text);
+};
+
+export { isNumeric, copyToClipboard };
