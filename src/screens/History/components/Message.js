@@ -5,10 +5,10 @@ import { StateContext } from "../../../store/StateProvider";
 import { ThemeContext } from "../../../store/ThemeProvider";
 
 export const Message = () => {
-  const { isMessageVisible, message } = useContext(StateContext);
+  const { isMessage, message } = useContext(StateContext);
   const { styles } = useContext(ThemeContext);
 
-  return isMessageVisible ? (
+  return isMessage ? (
     <View style={styles.containerMessage}>
       <Text style={styles.text}>{message}</Text>
     </View>

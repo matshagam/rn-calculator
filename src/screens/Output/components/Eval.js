@@ -3,13 +3,13 @@ import { Text, Animated } from "react-native";
 import { StateContext } from "../../../store/StateProvider";
 import { ThemeContext } from "../../../store/ThemeProvider";
 
-export const FirstOutput = () => {
-  const { firstSymbolOutput, firstNumberOutput } = useContext(StateContext);
+export default () => {
+  const { evalNumber } = useContext(StateContext);
   const { styles, themeColor, theme } = useContext(ThemeContext);
   const [translateAnim] = useState(new Animated.Value(140));
 
   useEffect(() => {
-    if (firstSymbolOutput) {
+    if (evalNumber) {
       Animated.spring(translateAnim, {
         toValue: 0,
         duration: 5000,
@@ -22,7 +22,7 @@ export const FirstOutput = () => {
         useNativeDriver: true,
       }).start();
     }
-  }, [firstSymbolOutput]);
+  }, [evalNumber]);
 
   return (
     <Animated.View
@@ -35,10 +35,10 @@ export const FirstOutput = () => {
       ]}
     >
       <Text style={[styles.txtDefaultOutput, { color: theme.primaryColorTxt }]}>
-        {firstSymbolOutput}
+        =
       </Text>
       <Text style={[styles.txtDefaultOutput, { color: theme.primaryColorTxt }]}>
-        {firstNumberOutput}
+        {evalNumber}
       </Text>
     </Animated.View>
   );

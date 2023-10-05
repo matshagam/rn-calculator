@@ -14,8 +14,8 @@ export const sysLang =
     : NativeModules.I18nManager.localeIdentifier;
 
 const lang = {
-  ru_RU: ["СОХР", "ОЧИС", "УДАЛ"],
-  en_US: ["SAVE", "CLR", "DEL"],
+  ru_RU: ["НАС", "ОЧИ", "УДА"],
+  en_US: ["SET", "CLR", "DEL"],
 };
 
 export const buttons = [
@@ -48,11 +48,17 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
   },
+  separator: {
+    width: "100%",
+    height: 1,
+    marginBottom: 19.5,
+    marginTop: 19.5,
+  },
   contHistory: {
     flex: 0.45,
   },
   contOutput: {
-    flex: 0.25,
+    height: 140,
   },
   contButtons: {
     flex: 0.9,
@@ -72,16 +78,6 @@ export const styles = StyleSheet.create({
   },
   containerHistory: {
     flex: 1,
-  },
-  clearCont: {
-    height: 30,
-    width: width,
-    alignItems: "center",
-    paddingHorizontal: 15,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    position: "absolute",
-    zIndex: 1,
   },
   txtExpression: {
     fontFamily: "Helvetica-Light",
@@ -126,10 +122,7 @@ export const styles = StyleSheet.create({
     fontFamily: "Helvetica-Light",
     fontSize: 15,
   },
-  buttonEmptyHistoryText: {
-    fontFamily: "Helvetica-Light",
-    fontSize: 11,
-  },
+
   buttonsLeftSide: {
     flexDirection: "row",
     alignItems: "center",

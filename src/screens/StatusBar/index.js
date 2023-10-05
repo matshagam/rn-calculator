@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { StatusBar } from "react-native";
 import { ThemeContext } from "../../store/ThemeProvider";
 
-export const StatusBarStyle = () => {
+export default () => {
   const { themeColor } = useContext(ThemeContext);
 
   return (

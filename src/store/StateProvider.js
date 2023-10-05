@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from "react";
-import Clipboard from "@react-native-community/clipboard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { buttons, sysLang, initialOutput, maxLength } from "../initialState";
@@ -9,13 +8,12 @@ export const StateContext = createContext();
 
 export default ({ children }) => {
   const [state, setState] = useState({
-    firstSymbolOutput: "",
-    firstNumberOutput: "",
-    secondNumberOutput: "",
+    evalNumber: "",
+    calcNumber: "",
     history: [],
-    isHistorySaved: false,
-    isMessageVisible: false,
-    isSettingsVisible: false,
+    isHistory: false,
+    isMessage: false,
+    isSettings: false,
     message: "",
     buttons: buttons,
     sysLang: sysLang,
@@ -26,11 +24,11 @@ export default ({ children }) => {
   }, []);
 
   useEffect(() => {
-    _storeSettings(state.isHistorySaved);
-  }, [state.isHistorySaved]);
+    _storeSettings(state.isHistory);
+  }, [state.isHistory]);
 
   useEffect(() => {
-    if (state.isHistorySaved) {
+    if (state.isHistory) {
       _storeHistory(state.history);
     }
   }, [state.history]);
@@ -60,7 +58,7 @@ export default ({ children }) => {
     if (value) {
       setState({
         ...state,
-        isHistorySaved: value ? value : state.isHistorySaved,
+        isHistory: value ? value : state.isHistory,
       });
 
       if (value) _retrieveHistory();
@@ -70,29 +68,30 @@ export default ({ children }) => {
   const _saveData = () => {
     setState({
       ...state,
-      isHistorySaved: !state.isHistorySaved,
+      isHistory: !state.isHistory,
     });
   };
 
   const _handleEvent = (value) => {
-    const { firstNumberOutput, secondNumberOutput, history } = state;
+    const { evalNumber, calcNumber, history } = state;
     let sum, dEval, tEval, toEval, temp;
 
-    const last = secondNumberOutput.slice(-1);
+    const last = calcNumber.slice(-1);
 
     if (!isNumeric(last) && value === last) return;
 
     const isPercent = /[%]/.test(last);
-    const isExist = /[+]|[-]/.test(secondNumberOutput);
-    const isDotNotExist = !/[+].*[.]/.test(secondNumberOutput);
+    const isEachExist = /[+]|[-]/.test(calcNumber);
+    const isAllExist = /[+]|[-]|[÷]|[x]/.test(calcNumber);
+    const isDotNotExist = !/[+].*[.]/.test(calcNumber);
 
-    if (secondNumberOutput.length >= maxLength) {
+    if (calcNumber.length >= maxLength) {
       _showMessage(`Превышен максимум в ${maxLength} цифр!`);
     }
 
     switch (value) {
       case buttons[0][0]:
-        _setToClipboard();
+        _showSettings();
 
         break;
 
@@ -104,29 +103,26 @@ export default ({ children }) => {
       case buttons[0][2]:
         setState({
           ...state,
-          secondNumberOutput:
-            secondNumberOutput.length === 1
-              ? initialOutput
-              : secondNumberOutput.slice(0, -1),
+          calcNumber:
+            calcNumber.length === 1 ? initialOutput : calcNumber.slice(0, -1),
         });
 
         break;
 
       case buttons[0][3]:
-        if (isExist && isNumeric(last)) {
-          dEval = eval(secondNumberOutput);
+        if (isEachExist && isNumeric(last)) {
+          dEval = eval(calcNumber);
           tEval = dEval / 100;
           sum = dEval + tEval;
 
           setState({
             ...state,
-            firstNumberOutput: sum,
-            firstSymbolOutput: buttons[4][2],
-            secondNumberOutput: secondNumberOutput + value,
+            evalNumber: sum,
+            calcNumber: calcNumber + value,
             history,
           });
 
-          history.push([secondNumberOutput + " (" + tEval + ")", sum]);
+          history.push([calcNumber + " (" + tEval + ")", sum]);
         }
 
         break;
@@ -136,27 +132,27 @@ export default ({ children }) => {
       case buttons[3][3]:
       case buttons[4][3]:
         if (isNumeric(last)) {
-          toEval = secondNumberOutput.replace(/÷/, "/").replace(/x/, "*");
-          dEval = eval(toEval);
+          if (isAllExist) {
+            toEval = calcNumber.replace(/÷/, "/").replace(/x/, "*");
+            dEval = eval(toEval);
+            history.push([calcNumber, dEval]);
 
-          setState({
-            ...state,
-            secondNumberOutput: dEval + value,
-            firstNumberOutput: dEval,
-            firstSymbolOutput: buttons[4][2],
-          });
-
-          history.push([secondNumberOutput, dEval]);
+            temp = {
+              calcNumber: dEval + value,
+              evalNumber: dEval,
+            };
+          } else {
+            temp = {
+              calcNumber: calcNumber + value,
+            };
+          }
         } else {
           temp = isPercent
-            ? firstNumberOutput + value
-            : secondNumberOutput.slice(0, -1) + value;
-
-          setState({
-            ...state,
-            secondNumberOutput: temp,
-          });
+            ? evalNumber + value
+            : calcNumber.slice(0, -1) + value;
         }
+
+        setState({ ...state, ...temp });
 
         break;
 
@@ -164,30 +160,30 @@ export default ({ children }) => {
         if (isNumeric(last) && isDotNotExist) {
           setState({
             ...state,
-            secondNumberOutput: secondNumberOutput + value,
+            calcNumber: calcNumber + value,
           });
         }
         break;
 
       case buttons[4][2]:
         if (isNumeric(last)) {
-          toEval = secondNumberOutput.replace(/÷/, "/").replace(/x/, "*");
+          toEval = calcNumber.replace(/÷/, "/").replace(/x/, "*");
           dEval = eval(toEval);
 
           setState({
             ...state,
-            firstNumberOutput: dEval,
-            firstSymbolOutput: buttons[4][2],
+            evalNumber: dEval,
           });
 
-          history.push([secondNumberOutput, dEval]);
+          history.push([calcNumber, dEval]);
         }
         break;
 
       default:
         setState({
           ...state,
-          secondNumberOutput: secondNumberOutput + value,
+          calcNumber: calcNumber + value,
+          evalNumber: "",
         });
 
         break;
@@ -197,9 +193,8 @@ export default ({ children }) => {
   const _initOutput = () => {
     setState({
       ...state,
-      firstSymbolOutput: "",
-      firstNumberOutput: "",
-      secondNumberOutput: "",
+      evalNumber: "",
+      calcNumber: "",
     });
   };
 
@@ -207,24 +202,16 @@ export default ({ children }) => {
     setState({ ...state, history: [] });
   };
 
-  const _setToClipboard = () => {
-    const { firstNumberOutput } = state;
-
-    const clipboard = firstNumberOutput.toString();
-    Clipboard.setString(clipboard);
-    _showMessage(`Сохранено в буфер: ${clipboard}`);
-  };
-
   const _showMessage = (message) => {
-    setState({ ...state, isMessageVisible: true, message: message });
+    setState({ ...state, isMessage: true, message: message });
 
     setTimeout(() => {
-      setState({ ...state, isMessageVisible: false });
+      setState({ ...state, isMessage: false });
     }, 3000);
   };
 
   const _showSettings = () => {
-    setState({ ...state, isSettingsVisible: !state.isSettingsVisible });
+    setState({ ...state, isSettings: !state.isSettings });
   };
 
   return (

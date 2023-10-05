@@ -4,21 +4,28 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { StateContext } from "../../store/StateProvider";
 import { ThemeContext } from "../../store/ThemeProvider";
+import Separator from "./components/Separator";
 
-export const Settings = () => {
+export default () => {
   const {
     sysLang,
-    isSettingsVisible,
-    isHistorySaved,
+    isSettings,
+    isHistory,
     _showSettings,
     _saveData,
+    _clearHistory,
   } = useContext(StateContext);
   const { theme, styles, themeColor, _changeThemeColor } =
     useContext(ThemeContext);
 
   const historySaved = {
-    ru_RU: `История ${isHistorySaved ? "" : "не"} сохраняется`,
-    en_US: `The history is ${isHistorySaved ? "" : "not"} saved"`,
+    ru_RU: `История ${isHistory ? "" : "не"} сохраняется`,
+    en_US: `The history is ${isHistory ? "" : "not"} saved"`,
+  };
+
+  const historyClear = {
+    ru_RU: "Очистить историю",
+    en_US: "Clear history",
   };
 
   const themeMode = {
@@ -32,7 +39,7 @@ export const Settings = () => {
   };
 
   return (
-    <Modal animationType="slide" visible={isSettingsVisible}>
+    <Modal animationType="slide" visible={isSettings}>
       <View
         style={[
           styles.modalView,
@@ -83,10 +90,41 @@ export const Settings = () => {
               <Ionicons
                 size={23}
                 color={theme.secondaryColorTxt}
-                name={isHistorySaved ? "ios-cloud" : "ios-cloud-outline"}
+                name={isHistory ? "ios-cloud" : "ios-cloud-outline"}
               />
             </TouchableOpacity>
           </View>
+          <View
+            style={{
+              width: "100%",
+              height: 40,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                color: theme.secondaryColorTxt,
+              }}
+            >
+              {historyClear[sysLang]}
+            </Text>
+            <TouchableOpacity
+              style={{ opacity: 0.5, width: 23, alignItems: "center" }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              onPress={() => {
+                _clearHistory();
+              }}
+            >
+              <Ionicons
+                size={23}
+                color={theme.secondaryColorTxt}
+                name="ios-trash"
+              />
+            </TouchableOpacity>
+          </View>
+          <Separator />
           <View
             style={{
               width: "100%",

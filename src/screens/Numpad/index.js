@@ -3,10 +3,12 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { StateContext } from "../../store/StateProvider";
 import { ThemeContext } from "../../store/ThemeProvider";
 
-export const NumberButtons = () => {
+export default () => {
   const { buttons, _handleEvent } = useContext(StateContext);
   const { theme, themeColor, styles, _styledButtons } =
     useContext(ThemeContext);
+
+  const colSpan = ["тройка", "стить", "лить"];
 
   return (
     <View style={[styles.contButtons, { backgroundColor: theme.primaryColor }]}>
@@ -17,29 +19,31 @@ export const NumberButtons = () => {
               <TouchableOpacity
                 key={colIndex}
                 onPress={() => _handleEvent(col)}
+                style={[
+                  styles.contButton,
+                  {
+                    borderColor: themeColor === "light" ? "#ecf0f1" : null,
+                  },
+                  themeColor === "light"
+                    ? _styledButtons(rowIndex, colIndex)
+                    : null,
+                ]}
               >
-                <View
+                <Text
                   style={[
-                    styles.contButton,
+                    styles.txtDefault,
                     {
-                      borderColor: themeColor === "light" ? "#ecf0f1" : null,
+                      color: theme.primaryColorTxt,
                     },
-                    themeColor === "light"
-                      ? _styledButtons(rowIndex, colIndex)
-                      : null,
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.txtDefault,
-                      {
-                        color: theme.primaryColorTxt,
-                      },
-                    ]}
-                  >
-                    {col}
+                  {col}
+                </Text>
+                {rowIndex === 0 && colIndex <= 2 ? (
+                  <Text style={{ color: theme.primaryColorTxt }}>
+                    {colSpan[colIndex]}
                   </Text>
-                </View>
+                ) : null}
               </TouchableOpacity>
             ))}
           </View>

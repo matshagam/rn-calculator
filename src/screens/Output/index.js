@@ -1,18 +1,18 @@
 import React, { useContext } from "react";
 import { View } from "react-native";
 
-import { FirstOutput } from "./components/firstOutput";
-import { SecondOutput } from "./components/secondOutput";
+import Eval from "./components/Eval";
+import Calc from "./components/Calc";
 
 import { ThemeContext } from "../../store/ThemeProvider";
 
-export const Output = () => {
+export default () => {
   const { styles } = useContext(ThemeContext);
 
   return (
     <View style={styles.contOutput}>
-      <FirstOutput />
-      <SecondOutput />
+      <Eval />
+      <Calc />
     </View>
   );
 };

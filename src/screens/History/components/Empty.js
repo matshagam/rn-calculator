@@ -4,7 +4,7 @@ import { View, Text } from "react-native";
 import { ThemeContext } from "../../../store/ThemeProvider";
 import { StateContext } from "../../../store/StateProvider";
 
-export const EmptyHistory = () => {
+export default () => {
   const { theme, styles } = useContext(ThemeContext);
   const { sysLang } = useContext(StateContext);
 

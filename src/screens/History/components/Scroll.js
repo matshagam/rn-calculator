@@ -4,7 +4,7 @@ import { ScrollView, View, Text, TouchableOpacity } from "react-native";
 import { StateContext } from "../../../store/StateProvider";
 import { ThemeContext } from "../../../store/ThemeProvider";
 
-export const ScrollHistory = () => {
+export default () => {
   const { history, _handleEvent } = useContext(StateContext);
   const { theme, styles } = useContext(ThemeContext);
   const scrollViewRef = useRef();

@@ -1,15 +1,13 @@
 import React, { useContext } from "react";
 import { View } from "react-native";
-import { ShowSettings } from "../Settings/components/ShowSettings";
 import { Message } from "./components/Message";
-import { ClearHistory } from "./components/ClearHistory";
-import { ScrollHistory } from "./components/ScrollHistory";
-import { EmptyHistory } from "./components/EmptyHistory";
+import Scroll from "./components/Scroll";
+import Empty from "./components/Empty";
 
 import { StateContext } from "../../store/StateProvider";
 import { ThemeContext } from "../../store/ThemeProvider";
 
-export const HistoryView = () => {
+export default () => {
   const { history } = useContext(StateContext);
   const { theme, styles } = useContext(ThemeContext);
 
@@ -26,15 +24,7 @@ export const HistoryView = () => {
           { backgroundColor: theme.primaryColor },
         ]}
       >
-        <View
-          style={[styles.clearCont, { backgroundColor: theme.primaryColor }]}
-        >
-          <View style={styles.buttonsLeftSide}>
-            <ShowSettings />
-          </View>
-          <ClearHistory />
-        </View>
-        {history.length !== 0 ? <ScrollHistory /> : <EmptyHistory />}
+        {!!history.length ? <Scroll /> : <Empty />}
       </View>
       <Message />
     </View>
