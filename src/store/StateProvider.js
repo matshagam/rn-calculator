@@ -135,22 +135,18 @@ export default ({ children }) => {
           if (isAllExist) {
             toEval = calcNumber.replace(/[÷]/, "/").replace(/[x]/, "*");
             dEval = eval(toEval);
+            temp = { calcNumber: dEval + value };
+
             if (evalNumber) {
-              temp = {
-                calcNumber: dEval + value,
-              };
+              return;
             } else {
               history.push([calcNumber, dEval]);
               temp = {
-                calcNumber: dEval + value,
+                ...temp,
                 evalNumber: dEval,
               };
             }
-          } else {
-            temp = {
-              calcNumber: calcNumber + value,
-            };
-          }
+          } else temp = { calcNumber: calcNumber + value };
         } else {
           temp = {
             calcNumber: isPercent

@@ -86,7 +86,7 @@ export const styles = StyleSheet.create({
   txtResult: {
     color: "#27ae60",
     fontFamily: "Helvetica-Light",
-    fontSize: 30,
+    fontSize: 20,
   },
   historyCont: {
     flex: 1,

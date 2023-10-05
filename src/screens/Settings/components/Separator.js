@@ -7,7 +7,10 @@ export default () => {
 
   return (
     <View
-      style={[styles.separator, { backgroundColor: theme.secondaryColorTxt }]}
+      style={[
+        styles.separator,
+        { opacity: 0.5, backgroundColor: theme.secondaryColorTxt },
+      ]}
     />
   );
 };

@@ -4,11 +4,14 @@ import { StateContext } from "../../store/StateProvider";
 import { ThemeContext } from "../../store/ThemeProvider";
 
 export default () => {
-  const { buttons, _handleEvent } = useContext(StateContext);
+  const { sysLang, buttons, _handleEvent } = useContext(StateContext);
   const { theme, themeColor, styles, _styledButtons } =
     useContext(ThemeContext);
 
-  const colSpan = ["тройка", "стить", "лить"];
+  const colSpan = {
+    ru_RU: ["троить", "стить", "лить"],
+    en_US: ["", "", ""],
+  };
 
   return (
     <View style={[styles.contButtons, { backgroundColor: theme.primaryColor }]}>
@@ -41,7 +44,7 @@ export default () => {
                 </Text>
                 {rowIndex === 0 && colIndex <= 2 ? (
                   <Text style={{ color: theme.primaryColorTxt }}>
-                    {colSpan[colIndex]}
+                    {colSpan[sysLang][colIndex]}
                   </Text>
                 ) : null}
               </TouchableOpacity>
