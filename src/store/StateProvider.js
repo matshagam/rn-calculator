@@ -111,9 +111,10 @@ export default ({ children }) => {
 
       case buttons[0][3]:
         if (isEachExist && isNumeric(last)) {
-          dEval = eval(calcNumber);
-          tEval = dEval / 100;
-          sum = numToPrecision(dEval + tEval);
+          const splitIt = calcNumber.split(/[+|-]/);
+          tEval = (Number(splitIt[0]) / 100) * Number(splitIt[1]);
+          dEval = Number(splitIt[0]) + tEval;
+          sum = numToPrecision(dEval);
 
           setState({
             ...state,

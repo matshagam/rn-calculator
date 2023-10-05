@@ -5,7 +5,7 @@ const isNumeric = (n) => !isNaN(n);
 const openUrl = async (url) => await Linking.openURL(url);
 
 const numToPrecision = (num) => {
-  return Number.isInteger(num) ? num : num.toPrecision(2);
+  return Number.isInteger(num) ? num : num.toFixed(2);
 };
 
 export { isNumeric, openUrl, numToPrecision };
