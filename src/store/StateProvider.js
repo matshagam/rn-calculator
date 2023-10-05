@@ -137,9 +137,7 @@ export default ({ children }) => {
             dEval = eval(toEval);
             temp = { calcNumber: dEval + value };
 
-            if (evalNumber) {
-              return;
-            } else {
+            if (!evalNumber) {
               history.push([calcNumber, dEval]);
               temp = {
                 ...temp,
