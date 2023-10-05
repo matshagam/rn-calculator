@@ -180,4 +180,10 @@ export const styles = StyleSheet.create({
   numeralStyle: {
     backgroundColor: "#D7E4F5",
   },
+  hitSlop: {
+    top: 10,
+    bottom: 10,
+    left: 10,
+    right: 10,
+  },
 });

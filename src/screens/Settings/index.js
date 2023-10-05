@@ -84,7 +84,7 @@ export default () => {
             </Text>
             <TouchableOpacity
               style={{ opacity: 0.5, width: 23, alignItems: "center" }}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              hitSlop={styles.hitSlop}
               onPress={() => {
                 _saveData();
               }}
@@ -114,7 +114,7 @@ export default () => {
             </Text>
             <TouchableOpacity
               style={{ opacity: 0.5, width: 23, alignItems: "center" }}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              hitSlop={styles.hitSlop}
               onPress={() => {
                 _clearHistory();
               }}
@@ -145,7 +145,7 @@ export default () => {
             </Text>
             <TouchableOpacity
               style={{ opacity: 0.5, width: 23, alignItems: "center" }}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              hitSlop={styles.hitSlop}
               onPress={() => {
                 _changeThemeColor();
               }}
@@ -189,7 +189,7 @@ export default () => {
                 paddingVertical: 10,
                 borderRadius: 3,
               }}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              hitSlop={styles.hitSlop}
               onPress={() => openUrl("https://pay.mysbertips.ru/32127605")}
             >
               <Text style={{ fontSize: 16 }}>
@@ -201,7 +201,7 @@ export default () => {
         </View>
         <TouchableOpacity
           style={{ alignItems: "center", opacity: 0.5 }}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          hitSlop={styles.hitSlop}
           onPress={() => {
             _showSettings();
           }}
