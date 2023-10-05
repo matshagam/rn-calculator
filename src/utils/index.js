@@ -4,4 +4,8 @@ const isNumeric = (n) => !isNaN(n);
 
 const openUrl = async (url) => await Linking.openURL(url);
 
-export { isNumeric, openUrl };
+const numToPrecision = (num) => {
+  return Number.isInteger(num) ? num : num.toPrecision(2);
+};
+
+export { isNumeric, openUrl, numToPrecision };

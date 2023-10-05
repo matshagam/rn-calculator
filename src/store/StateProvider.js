@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { buttons, sysLang, initialOutput, maxLength } from "../initialState";
-import { isNumeric } from "../utils";
+import { isNumeric, numToPrecision } from "../utils";
 
 export const StateContext = createContext();
 
@@ -113,7 +113,7 @@ export default ({ children }) => {
         if (isEachExist && isNumeric(last)) {
           dEval = eval(calcNumber);
           tEval = dEval / 100;
-          sum = (dEval + tEval).toPrecision(2);
+          sum = numToPrecision(dEval + tEval);
 
           setState({
             ...state,
@@ -134,7 +134,7 @@ export default ({ children }) => {
         if (isNumeric(last)) {
           if (isAllExist) {
             toEval = calcNumber.replace(/[÷]/, "/").replace(/[x]/, "*");
-            dEval = eval(toEval).toPrecision(2);
+            dEval = numToPrecision(eval(toEval));
             temp = { calcNumber: dEval + value };
 
             if (!evalNumber) {
@@ -169,7 +169,7 @@ export default ({ children }) => {
       case buttons[4][2]:
         if (isNumeric(last) && !evalNumber) {
           toEval = calcNumber.replace(/÷/, "/").replace(/x/, "*");
-          dEval = eval(toEval).toPrecision(2);
+          dEval = numToPrecision(eval(toEval));
 
           setState({
             ...state,
