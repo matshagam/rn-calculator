@@ -1,9 +1,7 @@
-import * as Clipboard from "expo-clipboard";
+import { Linking } from "react-native";
 
 const isNumeric = (n) => !isNaN(n);
 
-const copyToClipboard = async ({ text }) => {
-  await Clipboard.setStringAsync(text);
-};
+const openUrl = async (url) => await Linking.openURL(url);
 
-export { isNumeric, copyToClipboard };
+export { isNumeric, openUrl };

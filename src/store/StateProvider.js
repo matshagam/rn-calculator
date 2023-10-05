@@ -224,6 +224,7 @@ export default ({ children }) => {
       value={{
         ...state,
         _showSettings: _showSettings,
+        _showMessage: _showMessage,
         _saveData: _saveData,
         _clearHistory: _clearHistory,
         _handleEvent: _handleEvent,

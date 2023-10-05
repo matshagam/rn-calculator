@@ -6,7 +6,7 @@ import { StateContext } from "../../store/StateProvider";
 import { ThemeContext } from "../../store/ThemeProvider";
 import Separator from "./components/Separator";
 import DONATE from "../../../assets/donate.png";
-import { copyToClipboard } from "../../utils";
+import { openUrl } from "../../utils";
 
 export default () => {
   const {
@@ -190,14 +190,12 @@ export default () => {
                 borderRadius: 3,
               }}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              onPress={() => {
-                copyToClipboard("https://pay.mysbertips.ru/32127605");
-              }}
+              onPress={() => openUrl("https://pay.mysbertips.ru/32127605")}
             >
-              <Text style={{ color: "#27ae60", fontSize: 16 }}>
+              <Text style={{ fontSize: 16 }}>
                 https://pay.mysbertips.ru/32127605
               </Text>
-              <Ionicons name="ios-copy-outline" size={24} color="black" />
+              <Ionicons name="ios-link" size={24} color="black" />
             </TouchableOpacity>
           </View>
         </View>
