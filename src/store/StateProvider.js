@@ -89,109 +89,105 @@ export default ({ children }) => {
       _showMessage(`Превышен максимум в ${maxLength} цифр!`);
     }
 
-    try {
-      switch (value) {
-        case buttons[0][0]:
-          _showSettings();
+    switch (value) {
+      case buttons[0][0]:
+        _showSettings();
 
-          break;
+        break;
 
-        case buttons[0][1]:
-          _initOutput();
+      case buttons[0][1]:
+        _initOutput();
 
-          break;
+        break;
 
-        case buttons[0][2]:
+      case buttons[0][2]:
+        setState({
+          ...state,
+          calcNumber:
+            calcNumber.length === 1 ? initialOutput : calcNumber.slice(0, -1),
+        });
+
+        break;
+
+      case buttons[0][3]:
+        if (isEachExist && isNumeric(last)) {
+          dEval = eval(calcNumber);
+          tEval = dEval / 100;
+          sum = (dEval + tEval).toPrecision(2);
+
           setState({
             ...state,
-            calcNumber:
-              calcNumber.length === 1 ? initialOutput : calcNumber.slice(0, -1),
+            evalNumber: sum,
+            calcNumber: calcNumber + value,
+            history,
           });
 
-          break;
+          history.push([calcNumber + " (" + tEval + ")", sum]);
+        }
 
-        case buttons[0][3]:
-          if (isEachExist && isNumeric(last)) {
-            dEval = eval(calcNumber);
-            tEval = dEval / 100;
-            sum = dEval + tEval;
+        break;
 
-            setState({
-              ...state,
-              evalNumber: sum,
-              calcNumber: calcNumber + value,
-              history,
-            });
+      case buttons[1][3]:
+      case buttons[2][3]:
+      case buttons[3][3]:
+      case buttons[4][3]:
+        if (isNumeric(last)) {
+          if (isAllExist) {
+            toEval = calcNumber.replace(/[÷]/, "/").replace(/[x]/, "*");
+            dEval = eval(toEval).toPrecision(2);
+            temp = { calcNumber: dEval + value };
 
-            history.push([calcNumber + " (" + tEval + ")", sum]);
-          }
+            if (!evalNumber) {
+              history.push([calcNumber, dEval]);
+              temp = {
+                ...temp,
+                evalNumber: dEval,
+              };
+            }
+          } else temp = { calcNumber: calcNumber + value };
+        } else {
+          temp = {
+            calcNumber: isPercent
+              ? evalNumber + value
+              : calcNumber.slice(0, -1) + value,
+          };
+        }
 
-          break;
+        setState({ ...state, ...temp });
 
-        case buttons[1][3]:
-        case buttons[2][3]:
-        case buttons[3][3]:
-        case buttons[4][3]:
-          if (isNumeric(last)) {
-            if (isAllExist) {
-              toEval = calcNumber.replace(/[÷]/, "/").replace(/[x]/, "*");
-              dEval = eval(toEval);
-              temp = { calcNumber: dEval + value };
+        break;
 
-              if (!evalNumber) {
-                history.push([calcNumber, dEval]);
-                temp = {
-                  ...temp,
-                  evalNumber: dEval,
-                };
-              }
-            } else temp = { calcNumber: calcNumber + value };
-          } else {
-            temp = {
-              calcNumber: isPercent
-                ? evalNumber + value
-                : calcNumber.slice(0, -1) + value,
-            };
-          }
-
-          setState({ ...state, ...temp });
-
-          break;
-
-        case buttons[4][1]:
-          if (isNumeric(last) && isDotNotExist) {
-            setState({
-              ...state,
-              calcNumber: calcNumber + value,
-            });
-          }
-          break;
-
-        case buttons[4][2]:
-          if (isNumeric(last) && !evalNumber) {
-            toEval = calcNumber.replace(/÷/, "/").replace(/x/, "*");
-            dEval = eval(toEval);
-
-            setState({
-              ...state,
-              evalNumber: dEval,
-            });
-
-            history.push([calcNumber, dEval]);
-          }
-          break;
-
-        default:
+      case buttons[4][1]:
+        if (isNumeric(last) && isDotNotExist) {
           setState({
             ...state,
             calcNumber: calcNumber + value,
-            evalNumber: "",
+          });
+        }
+        break;
+
+      case buttons[4][2]:
+        if (isNumeric(last) && !evalNumber) {
+          toEval = calcNumber.replace(/÷/, "/").replace(/x/, "*");
+          dEval = eval(toEval).toPrecision(2);
+
+          setState({
+            ...state,
+            evalNumber: dEval,
           });
 
-          break;
-      }
-    } catch (err) {
-      _showMessage(`${err}`);
+          history.push([calcNumber, dEval]);
+        }
+        break;
+
+      default:
+        setState({
+          ...state,
+          calcNumber: calcNumber + value,
+          evalNumber: "",
+        });
+
+        break;
     }
   };
 
