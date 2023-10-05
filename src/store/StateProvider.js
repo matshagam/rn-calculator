@@ -111,16 +111,16 @@ export default ({ children }) => {
 
       case buttons[0][3]:
         if (isEachExist && isNumeric(last)) {
-          const splitIt = calcNumber.split(/[+|-]/);
-          tEval = (Number(splitIt[0]) / 100) * Number(splitIt[1]);
-          dEval = Number(splitIt[0]) + tEval;
+          const nums = calcNumber.split(/[+|-]/).map((m) => +m);
+          tEval = (nums[0] / 100) * nums[1];
+          dEval = nums[0] + tEval;
           sum = numToPrecision(dEval);
 
           setState({
             ...state,
+            history,
             evalNumber: sum,
             calcNumber: calcNumber + value,
-            history,
           });
 
           history.push([calcNumber + " (" + tEval + ")", sum]);
