@@ -175,7 +175,7 @@ export default () => {
                 padding: 12,
               }}
             >
-              <Image style={{ height: 150, width: 150 }} source={DONATE} />
+              <Image source={DONATE} />
             </View>
             <TouchableOpacity
               style={{
