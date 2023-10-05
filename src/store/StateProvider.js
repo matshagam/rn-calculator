@@ -135,12 +135,17 @@ export default ({ children }) => {
           if (isAllExist) {
             toEval = calcNumber.replace(/[÷]/, "/").replace(/[x]/, "*");
             dEval = eval(toEval);
-            history.push([calcNumber, dEval]);
-
-            temp = {
-              calcNumber: dEval + value,
-              evalNumber: dEval,
-            };
+            if (evalNumber) {
+              temp = {
+                calcNumber: dEval + value,
+              };
+            } else {
+              history.push([calcNumber, dEval]);
+              temp = {
+                calcNumber: dEval + value,
+                evalNumber: dEval,
+              };
+            }
           } else {
             temp = {
               calcNumber: calcNumber + value,
@@ -168,7 +173,7 @@ export default ({ children }) => {
         break;
 
       case buttons[4][2]:
-        if (isNumeric(last)) {
+        if (isNumeric(last) && !evalNumber) {
           toEval = calcNumber.replace(/÷/, "/").replace(/x/, "*");
           dEval = eval(toEval);
 
