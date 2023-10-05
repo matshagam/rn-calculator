@@ -175,7 +175,7 @@ export default () => {
                 padding: 12,
               }}
             >
-              <Image source={DONATE} />
+              <Image style={{ height: 150, width: 150 }} source={DONATE} />
             </View>
             <TouchableOpacity
               style={{
@@ -193,7 +193,7 @@ export default () => {
               onPress={() => openUrl("https://pay.mysbertips.ru/32127605")}
             >
               <Text style={{ fontSize: 16 }}>
-                https://pay.mysbertips.ru/32127605
+                Страница для донатов в Сбер Чаевые
               </Text>
               <Ionicons name="ios-link" size={24} color="black" />
             </TouchableOpacity>
