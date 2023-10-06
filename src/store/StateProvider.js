@@ -162,6 +162,7 @@ export default ({ children }) => {
         if (isComplete) {
           sum = _eval();
           param = { evalNumber: sum };
+
           history.push([calcNumber, sum]);
         }
 
