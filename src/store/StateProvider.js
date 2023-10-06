@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { buttons, sysLang, initialOutput, maxLength } from "../initialState";
+import { buttons, sysLang, maxLength } from "../initialState";
 import { isNumeric, numToPrecision } from "../utils";
 
 export const StateContext = createContext();
@@ -73,17 +73,14 @@ export default ({ children }) => {
   };
 
   const _handleEvent = (value) => {
-    const { evalNumber, calcNumber, history } = state;
-    let sum, dEval, tEval, toEval, temp;
+    const { calcNumber, evalNumber, history } = state;
+    let sum, temp, param;
 
     const last = calcNumber.slice(-1);
-
-    if (!isNumeric(last) && value === last) return;
-
-    const isPercent = /[%]/.test(last);
-    const isEachExist = /[+]|[-]/.test(calcNumber);
-    const isAllExist = /[+]|[-]|[÷]|[x]/.test(calcNumber);
-    const isDotNotExist = !/[+|-|x|÷].*[.]/.test(calcNumber);
+    const isNumericLast = isNumeric(last);
+    const isDotNotExist = !/[-x÷+].*[.]/.test(calcNumber);
+    const isComplete = /[-x÷+][\d.|%]+$/.test(calcNumber);
+    const isPercent = /%/.test(calcNumber);
 
     if (calcNumber.length >= maxLength) {
       _showMessage(`Превышен максимум в ${maxLength} цифр!`);
@@ -96,34 +93,27 @@ export default ({ children }) => {
         break;
 
       case buttons[0][1]:
-        _initOutput();
+        param = { evalNumber: "", calcNumber: "" };
 
         break;
 
       case buttons[0][2]:
-        setState({
-          ...state,
-          calcNumber:
-            calcNumber.length === 1 ? initialOutput : calcNumber.slice(0, -1),
-        });
+        param = {
+          calcNumber: calcNumber.slice(0, -1),
+          evalNumber: "",
+        };
 
         break;
 
       case buttons[0][3]:
-        if (isEachExist && isNumeric(last)) {
+        if (isComplete) {
           const nums = calcNumber.split(/[+|-]/).map((m) => +m);
-          tEval = (nums[0] / 100) * nums[1];
-          dEval = nums[0] + tEval;
-          sum = numToPrecision(dEval);
 
-          setState({
-            ...state,
-            history,
-            evalNumber: sum,
-            calcNumber: calcNumber + value,
-          });
+          temp = (nums[0] / 100) * nums[1];
+          sum = numToPrecision(nums[0] + temp);
+          param = { evalNumber: sum, calcNumber: calcNumber + value };
 
-          history.push([calcNumber + " (" + tEval + ")", sum]);
+          history.push([calcNumber + " (" + temp + ")", sum]);
         }
 
         break;
@@ -132,72 +122,76 @@ export default ({ children }) => {
       case buttons[2][3]:
       case buttons[3][3]:
       case buttons[4][3]:
-        if (isNumeric(last)) {
-          if (isAllExist) {
-            toEval = calcNumber.replace(/[÷]/, "/").replace(/[x]/, "*");
-            dEval = numToPrecision(eval(toEval));
-            temp = { calcNumber: dEval + value };
+        if (isComplete) {
+          if (isPercent) {
+            param = {
+              calcNumber: evalNumber + value,
+              evalNumber: "",
+            };
+          } else {
+            sum = _eval();
+            param = {
+              calcNumber: sum + value,
+              evalNumber: evalNumber ? "" : sum,
+            };
 
-            if (!evalNumber) {
-              history.push([calcNumber, dEval]);
-              temp = {
-                ...temp,
-                evalNumber: dEval,
-              };
-            }
-          } else temp = { calcNumber: calcNumber + value };
+            history.push([calcNumber, sum]);
+          }
         } else {
-          temp = {
-            calcNumber: isPercent
-              ? evalNumber + value
+          param = {
+            calcNumber: isNumericLast
+              ? calcNumber + value
               : calcNumber.slice(0, -1) + value,
           };
         }
 
-        setState({ ...state, ...temp });
-
         break;
 
       case buttons[4][1]:
-        if (isNumeric(last) && isDotNotExist) {
-          setState({
-            ...state,
-            calcNumber: calcNumber + value,
-          });
+        if (isDotNotExist) {
+          temp = isNumericLast ? value : 0 + value;
+          param = {
+            calcNumber: calcNumber + temp,
+            evalNumber: "",
+          };
         }
+
         break;
 
       case buttons[4][2]:
-        if (isNumeric(last) && !evalNumber) {
-          toEval = calcNumber.replace(/÷/, "/").replace(/x/, "*");
-          dEval = numToPrecision(eval(toEval));
-
-          setState({
-            ...state,
-            evalNumber: dEval,
-          });
-
-          history.push([calcNumber, dEval]);
+        if (isComplete) {
+          sum = _eval();
+          param = { evalNumber: sum };
+          history.push([calcNumber, sum]);
         }
+
         break;
 
       default:
-        setState({
-          ...state,
-          calcNumber: calcNumber + value,
-          evalNumber: "",
-        });
+        param = { calcNumber: calcNumber + value, evalNumber: "" };
 
         break;
     }
-  };
 
-  const _initOutput = () => {
     setState({
       ...state,
-      evalNumber: "",
-      calcNumber: "",
+      ...param,
     });
+  };
+
+  const _eval = () => {
+    const { calcNumber } = state;
+    let sum;
+
+    const operand = calcNumber.match(/[-x÷+]/)[0];
+    const arr = calcNumber.split(operand);
+
+    if (operand === "+") sum = arr.reduce((a, b) => +a + +b);
+    if (operand === "-") sum = arr.reduce((a, b) => +a - +b);
+    if (operand === "x") sum = arr.reduce((a, b) => +a * +b);
+    if (operand === "÷") sum = arr.reduce((a, b) => +a / +b);
+
+    return numToPrecision(sum);
   };
 
   const _clearHistory = () => {
