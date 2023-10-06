@@ -84,7 +84,6 @@ export default () => {
             </Text>
             <TouchableOpacity
               style={{
-                opacity: 0.5,
                 width: 35,
                 padding: 5,
                 alignItems: "center",
@@ -95,7 +94,11 @@ export default () => {
                 _saveData();
               }}
             >
-              <Text style={{ color: theme.primaryColorTxt }}>
+              <Text
+                style={{
+                  color: theme.secondaryColorTxt,
+                }}
+              >
                 {isHistory ? "Да" : "Нет"}
               </Text>
             </TouchableOpacity>
