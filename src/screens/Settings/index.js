@@ -91,9 +91,7 @@ export default () => {
                 justifyContent: "center",
               }}
               hitSlop={styles.hitSlop}
-              onPress={() => {
-                _saveData();
-              }}
+              onPress={() => _saveData()}
             >
               <Text
                 style={{
@@ -128,9 +126,7 @@ export default () => {
                 width: 35,
               }}
               hitSlop={styles.hitSlop}
-              onPress={() => {
-                _clearHistory();
-              }}
+              onPress={() => _clearHistory()}
             >
               <Ionicons
                 size={23}
@@ -159,9 +155,7 @@ export default () => {
             <TouchableOpacity
               style={{ opacity: 0.5, width: 35, alignItems: "center" }}
               hitSlop={styles.hitSlop}
-              onPress={() => {
-                _changeThemeColor();
-              }}
+              onPress={() => _changeThemeColor()}
             >
               <Ionicons
                 size={23}
@@ -215,9 +209,7 @@ export default () => {
         <TouchableOpacity
           style={{ alignItems: "center", opacity: 0.5 }}
           hitSlop={styles.hitSlop}
-          onPress={() => {
-            _showSettings();
-          }}
+          onPress={() => _showSettings()}
         >
           <Ionicons
             size={35}
