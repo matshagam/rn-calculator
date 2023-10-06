@@ -18,33 +18,25 @@ export default () => {
         scrollViewRef.current.scrollToEnd({ animated: true });
       }}
     >
-      {history.map((key, i) => (
-        <View key={i} style={styles.historyCont}>
-          {key.calcNumber && (
+      {history.map((item, i) => (
+        <View item={i} style={styles.historyCont}>
+          {item.calcNumber && (
             <View style={styles.expressionCont}>
               <Text
                 style={[styles.txtExpression, { color: theme.primaryColorTxt }]}
               >
-                {key.calcNumber}
+                {item.calcNumber}
+                {item.per ? `% (${item.per})` : ""}
               </Text>
             </View>
           )}
-          {key.per && (
-            <View style={styles.expressionCont}>
-              <Text
-                style={[styles.txtExpression, { color: theme.primaryColorTxt }]}
-              >
-                % {key.per}
-              </Text>
-            </View>
-          )}
-          {key.sum && (
+          {item.sum && (
             <TouchableOpacity
               transparent
               style={styles.resultCont}
-              onPress={() => _handleEvent(key.sum)}
+              onPress={() => _handleEvent(item.sum)}
             >
-              <Text style={styles.txtResult}>= {key.sum}</Text>
+              <Text style={styles.txtResult}>= {item.sum}</Text>
             </TouchableOpacity>
           )}
         </View>
