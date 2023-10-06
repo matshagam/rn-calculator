@@ -163,7 +163,7 @@ export default ({ children }) => {
         break;
 
       case buttons[4][2]:
-        if (evalNumber) return;
+        if (!!evalNumber) return;
         if (isComplete) {
           sum = _eval(calcNumber);
           param = { evalNumber: sum };
