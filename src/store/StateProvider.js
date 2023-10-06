@@ -88,7 +88,7 @@ export default ({ children }) => {
 
     switch (value) {
       case buttons[0][0]:
-        _showSettings();
+        param = { isSettings: !state.isSettings };
 
         break;
 
@@ -107,17 +107,20 @@ export default ({ children }) => {
 
       case buttons[0][3]:
         if (isComplete) {
-          const num = calcNumber.split(/[-+]/).map((m) => +m);
-          const operand = calcNumber.match(/[-x÷+]/)[0];
+          const operand = calcNumber.match(/[-+]/);
 
-          temp = (num[0] / 100) * num[1];
+          if (!!operand) {
+            const num = calcNumber.split(/[-+]/).map((m) => +m);
 
-          if (operand === "+") sum = num[0] + temp;
-          if (operand === "-") sum = num[0] - temp;
+            temp = (num[0] / 100) * num[1];
 
-          param = { evalNumber: sum, calcNumber: calcNumber + value };
+            if (operand[0] === "+") sum = num[0] + temp;
+            if (operand[0] === "-") sum = num[0] - temp;
 
-          history.push([calcNumber + " (" + temp + ")", sum]);
+            param = { evalNumber: sum, calcNumber: calcNumber + value };
+
+            history.push([calcNumber + " (" + temp + ")", sum]);
+          }
         }
 
         break;
