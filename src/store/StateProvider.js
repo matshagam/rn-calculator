@@ -78,7 +78,7 @@ export default ({ children }) => {
 
     const last = calcNumber.slice(-1);
     const isNumericLast = isNumeric(last);
-    const isDotNotExist = !/[-x÷+].*[.]/.test(calcNumber);
+    const isDotExist = /[-x÷+].*[.]/.test(calcNumber);
     const isComplete = /[-x÷+][\d.|%]+$/.test(calcNumber);
     const isPercent = /%/.test(calcNumber);
 
@@ -107,10 +107,14 @@ export default ({ children }) => {
 
       case buttons[0][3]:
         if (isComplete) {
-          const nums = calcNumber.split(/[+|-]/).map((m) => +m);
+          const num = calcNumber.split(/[-+]/).map((m) => +m);
+          const operand = calcNumber.match(/[-x÷+]/)[0];
 
-          temp = (nums[0] / 100) * nums[1];
-          sum = numToPrecision(nums[0] + temp);
+          temp = (num[0] / 100) * num[1];
+
+          if (operand === "+") sum = num[0] + temp;
+          if (operand === "-") sum = num[0] - temp;
+
           param = { evalNumber: sum, calcNumber: calcNumber + value };
 
           history.push([calcNumber + " (" + temp + ")", sum]);
@@ -129,7 +133,7 @@ export default ({ children }) => {
               evalNumber: "",
             };
           } else {
-            sum = _eval();
+            sum = _eval(calcNumber);
             param = {
               calcNumber: sum + value,
               evalNumber: evalNumber ? "" : sum,
@@ -148,19 +152,20 @@ export default ({ children }) => {
         break;
 
       case buttons[4][1]:
-        if (isDotNotExist) {
-          temp = isNumericLast ? value : 0 + value;
-          param = {
-            calcNumber: calcNumber + temp,
-            evalNumber: "",
-          };
-        }
+        if (isDotExist) return;
+
+        temp = isNumericLast ? value : 0 + value;
+        param = {
+          calcNumber: calcNumber + temp,
+          evalNumber: "",
+        };
 
         break;
 
       case buttons[4][2]:
+        if (evalNumber) return;
         if (isComplete) {
-          sum = _eval();
+          sum = _eval(calcNumber);
           param = { evalNumber: sum };
 
           history.push([calcNumber, sum]);
@@ -180,12 +185,11 @@ export default ({ children }) => {
     });
   };
 
-  const _eval = () => {
-    const { calcNumber } = state;
+  const _eval = (str) => {
     let sum;
 
-    const operand = calcNumber.match(/[-x÷+]/)[0];
-    const arr = calcNumber.split(operand);
+    const operand = str.match(/[-x÷+]/)[0];
+    const arr = str.split(operand);
 
     if (operand === "+") sum = arr.reduce((a, b) => +a + +b);
     if (operand === "-") sum = arr.reduce((a, b) => +a - +b);
