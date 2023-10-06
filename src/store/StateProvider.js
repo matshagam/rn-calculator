@@ -153,7 +153,6 @@ export default ({ children }) => {
       case buttons[4][1]:
         if (isDotExist) return;
         if (isNumericLast) {
-          console.log("❗", last);
           temp = isNumericLast ? value : 0 + value;
           param = {
             calcNumber: calcNumber + temp,
@@ -175,6 +174,7 @@ export default ({ children }) => {
         break;
 
       default:
+        if (isPercent) return;
         param = { calcNumber: calcNumber + value, evalNumber: "" };
 
         break;
