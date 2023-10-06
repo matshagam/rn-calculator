@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { buttons, sysLang, maxLength } from "../initialState";
-import { isNumeric, numToPrecision } from "../utils";
+import { numToPrecision } from "../utils";
 
 export const StateContext = createContext();
 
@@ -77,10 +77,13 @@ export default ({ children }) => {
     let sum, temp, param;
 
     const last = calcNumber.slice(-1);
-    const isNumericLast = isNumeric(last);
+    const isNumericLast = /\d$/.test(calcNumber);
     const isDotExist = /[-x÷+].*[.]/.test(calcNumber);
     const isComplete = /[-x÷+][\d.|%]+$/.test(calcNumber);
     const isPercent = /%/.test(calcNumber);
+    const isPercentOperand = /[-+]/.test(calcNumber);
+
+    if (!isNumericLast && value === last) return;
 
     if (calcNumber.length >= maxLength) {
       _showMessage(`Превышен максимум в ${maxLength} цифр!`);
@@ -106,21 +109,12 @@ export default ({ children }) => {
         break;
 
       case buttons[0][3]:
-        if (isComplete) {
-          const operand = calcNumber.match(/[-+]/);
+        if (isComplete && isPercentOperand) {
+          const { sum, per } = _percent(calcNumber);
 
-          if (!!operand) {
-            const num = calcNumber.split(/[-+]/).map((m) => +m);
+          param = { evalNumber: sum, calcNumber: calcNumber + value };
 
-            temp = (num[0] / 100) * num[1];
-
-            if (operand[0] === "+") sum = num[0] + temp;
-            if (operand[0] === "-") sum = num[0] - temp;
-
-            param = { evalNumber: sum, calcNumber: calcNumber + value };
-
-            history.push([calcNumber + " (" + temp + ")", sum]);
-          }
+          history.push([calcNumber, per, sum]);
         }
 
         break;
@@ -129,39 +123,43 @@ export default ({ children }) => {
       case buttons[2][3]:
       case buttons[3][3]:
       case buttons[4][3]:
-        if (isComplete) {
-          if (isPercent) {
-            param = {
-              calcNumber: evalNumber + value,
-              evalNumber: "",
-            };
-          } else {
-            sum = _eval(calcNumber);
-            param = {
-              calcNumber: sum + value,
-              evalNumber: evalNumber ? "" : sum,
-            };
+        if (!!last) {
+          if (isComplete) {
+            if (isPercent) {
+              param = {
+                calcNumber: evalNumber + value,
+                evalNumber: "",
+              };
+            } else {
+              sum = _eval(calcNumber);
+              param = {
+                calcNumber: sum + value,
+                evalNumber: evalNumber ? "" : sum,
+              };
 
-            history.push([calcNumber, sum]);
+              history.push([calcNumber, sum]);
+            }
+          } else {
+            param = {
+              calcNumber: isNumericLast
+                ? calcNumber + value
+                : calcNumber.slice(0, -1) + value,
+            };
           }
-        } else {
-          param = {
-            calcNumber: isNumericLast
-              ? calcNumber + value
-              : calcNumber.slice(0, -1) + value,
-          };
         }
 
         break;
 
       case buttons[4][1]:
         if (isDotExist) return;
-
-        temp = isNumericLast ? value : 0 + value;
-        param = {
-          calcNumber: calcNumber + temp,
-          evalNumber: "",
-        };
+        if (isNumericLast) {
+          console.log("❗", last);
+          temp = isNumericLast ? value : 0 + value;
+          param = {
+            calcNumber: calcNumber + temp,
+            evalNumber: "",
+          };
+        }
 
         break;
 
@@ -186,6 +184,19 @@ export default ({ children }) => {
       ...state,
       ...param,
     });
+  };
+
+  const _percent = (str) => {
+    let sum, per;
+    const operand = str.match(/[-+]/)[0];
+    const num = str.split(/[-+]/).map((m) => +m);
+
+    per = (num[0] / 100) * num[1];
+
+    if (operand === "+") sum = numToPrecision(num[0] + per);
+    if (operand === "-") sum = numToPrecision(num[0] - per);
+
+    return { sum, per };
   };
 
   const _eval = (str) => {
