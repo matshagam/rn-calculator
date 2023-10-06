@@ -21,8 +21,8 @@ export default () => {
     useContext(ThemeContext);
 
   const historySaved = {
-    ru_RU: `История ${isHistory ? "" : "не"} сохраняется`,
-    en_US: `The history is ${isHistory ? "" : "not"} saved"`,
+    ru_RU: `История сохраняется`,
+    en_US: `The history is saved"`,
   };
 
   const historyClear = {
@@ -83,17 +83,21 @@ export default () => {
               {historySaved[sysLang]}
             </Text>
             <TouchableOpacity
-              style={{ opacity: 0.5, width: 23, alignItems: "center" }}
+              style={{
+                opacity: 0.5,
+                width: 35,
+                padding: 5,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
               hitSlop={styles.hitSlop}
               onPress={() => {
                 _saveData();
               }}
             >
-              <Ionicons
-                size={23}
-                color={theme.secondaryColorTxt}
-                name={isHistory ? "ios-cloud" : "ios-cloud-outline"}
-              />
+              <Text style={{ color: theme.primaryColorTxt }}>
+                {isHistory ? "Да" : "Нет"}
+              </Text>
             </TouchableOpacity>
           </View>
           <View
@@ -113,7 +117,11 @@ export default () => {
               {historyClear[sysLang]}
             </Text>
             <TouchableOpacity
-              style={{ opacity: 0.5, width: 23, alignItems: "center" }}
+              style={{
+                opacity: 0.5,
+                alignItems: "center",
+                width: 35,
+              }}
               hitSlop={styles.hitSlop}
               onPress={() => {
                 _clearHistory();
@@ -144,7 +152,7 @@ export default () => {
               {themeMode[sysLang]}
             </Text>
             <TouchableOpacity
-              style={{ opacity: 0.5, width: 23, alignItems: "center" }}
+              style={{ opacity: 0.5, width: 35, alignItems: "center" }}
               hitSlop={styles.hitSlop}
               onPress={() => {
                 _changeThemeColor();
@@ -175,7 +183,7 @@ export default () => {
                 padding: 12,
               }}
             >
-              <Image source={DONATE} />
+              <Image style={{ height: 150, width: 150 }} source={DONATE} />
             </View>
             <TouchableOpacity
               style={{
