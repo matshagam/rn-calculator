@@ -6,12 +6,14 @@ import {
   NativeModules,
 } from "react-native";
 
-export const width = Dimensions.get("window").width;
+export const { width, height } = Dimensions.get("window");
 
 export const sysLang =
   Platform.OS === "ios"
     ? NativeModules.SettingsManager.settings.AppleLocale
     : NativeModules.I18nManager.localeIdentifier;
+
+export const fontFamily = Platform.OS === "ios" ? "Helvetica-Light" : "Roboto";
 
 const lang = {
   ru_RU: ["НАС", "ОЧИ", "УДА"],
@@ -72,7 +74,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   txtDefaultOutput: {
-    fontFamily: "Helvetica-Light",
+    fontFamily,
     fontSize: 30,
     width: "auto",
   },
@@ -80,12 +82,12 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   txtExpression: {
-    fontFamily: "Helvetica-Light",
+    fontFamily,
     fontSize: 13,
   },
   txtResult: {
     color: "#27ae60",
-    fontFamily: "Helvetica-Light",
+    fontFamily,
     fontSize: 20,
   },
   historyCont: {
@@ -119,7 +121,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   txtEmptyHistory: {
-    fontFamily: "Helvetica-Light",
+    fontFamily,
     fontSize: 15,
   },
 
@@ -145,14 +147,14 @@ export const styles = StyleSheet.create({
   },
   text: {
     color: "#000",
-    fontFamily: "Helvetica-Light",
+    fontFamily,
     fontSize: 16,
   },
   containerNumbers: {
     flex: 1,
   },
   txtDefault: {
-    fontFamily: "Helvetica-Light",
+    fontFamily,
     fontSize: 20,
   },
   contRow: {
