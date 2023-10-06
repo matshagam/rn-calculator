@@ -114,7 +114,7 @@ export default ({ children }) => {
 
           param = { evalNumber: sum, calcNumber: calcNumber + value };
 
-          history.push([calcNumber, per, sum]);
+          history.push({ calcNumber, per, sum });
         }
 
         break;
@@ -137,7 +137,7 @@ export default ({ children }) => {
                 evalNumber: evalNumber ? "" : sum,
               };
 
-              history.push([calcNumber, sum]);
+              history.push({ calcNumber, sum });
             }
           } else {
             param = {
@@ -168,7 +168,7 @@ export default ({ children }) => {
           sum = _eval(calcNumber);
           param = { evalNumber: sum };
 
-          history.push([calcNumber, sum]);
+          history.push({ calcNumber, sum });
         }
 
         break;
