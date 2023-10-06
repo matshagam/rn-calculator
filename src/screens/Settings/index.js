@@ -6,6 +6,8 @@ import { StateContext } from "../../store/StateProvider";
 import { ThemeContext } from "../../store/ThemeProvider";
 import Separator from "./components/Separator";
 import DONATE from "../../../assets/donate.png";
+import SBER_C from "../../../assets/sber_c.png";
+import SBER_B from "../../../assets/sber_b.png";
 import { openUrl } from "../../utils";
 
 export default () => {
@@ -202,7 +204,10 @@ export default () => {
               <Text style={{ fontSize: 16 }}>
                 Страница для донатов в Сбер Чаевые
               </Text>
-              <Ionicons name="ios-link" size={24} color="black" />
+              <Image
+                style={{ height: 23, width: 23 }}
+                source={themeColor === "light" ? SBER_C : SBER_B}
+              />
             </TouchableOpacity>
           </View>
         </View>
