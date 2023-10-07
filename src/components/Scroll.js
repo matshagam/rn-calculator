@@ -26,10 +26,10 @@ export default () => {
   useEffect(() => {
     if (calcNumber) {
       if (marginBottom === 0) {
-        setMarginBottom(marginBottom + styles.output.height);
+        setMarginBottom(styles.output.height);
       }
     } else {
-      if (marginBottom === styles.output.height) {
+      if (marginBottom >= styles.output.height) {
         setMarginBottom(0);
       }
     }
@@ -42,10 +42,7 @@ export default () => {
   return (
     <ScrollView
       ref={scrollViewRef}
-      style={{
-        marginTop: 25,
-        marginBottom,
-      }}
+      style={{ marginTop: 25, marginBottom }}
       showsVerticalScrollIndicator={false}
       onContentSizeChange={onContentChange}
     >
