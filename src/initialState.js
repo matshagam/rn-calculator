@@ -69,11 +69,11 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     height: width / 6 - 2,
+    width: "100%",
     flexDirection: "row",
     paddingVertical: 5,
     paddingHorizontal: 15,
     position: "absolute",
-    width: "100%",
     zIndex: -1,
   },
   txtDefaultOutput: {
@@ -126,12 +126,6 @@ export const styles = StyleSheet.create({
   txtEmptyHistory: {
     fontFamily,
     fontSize: 15,
-  },
-
-  buttonsLeftSide: {
-    flexDirection: "row",
-    alignItems: "center",
-    opacity: 0.5,
   },
   modalView: {
     padding: 22,
