@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { buttons, sysLang, maxLength } from "../initialState";
+import { buttons, sysLang, maxLength, width } from "../initialState";
 import { numToPrecision } from "../utils";
 
 export const StateContext = createContext();
@@ -17,6 +17,7 @@ export default ({ children }) => {
     message: "",
     buttons: buttons,
     sysLang: sysLang,
+    width,
   });
 
   useEffect(() => {

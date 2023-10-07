@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { View, Text } from "react-native";
 
-import { ThemeContext } from "../../../store/ThemeProvider";
-import { StateContext } from "../../../store/StateProvider";
+import { ThemeContext } from "../store/ThemeProvider";
+import { StateContext } from "../store/StateProvider";
 
 export default () => {
   const { theme, styles } = useContext(ThemeContext);

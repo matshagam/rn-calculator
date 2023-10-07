@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { StateContext } from "../../store/StateProvider";
 import { ThemeContext } from "../../store/ThemeProvider";
-import Separator from "./components/Separator";
+import Separator from "../../components/Separator";
 import DONATE from "../../../assets/donate.png";
 import SBER_C from "../../../assets/sber_c.png";
 import SBER_B from "../../../assets/sber_b.png";

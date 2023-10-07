@@ -28,7 +28,6 @@ export const buttons = [
   [0, ".", "=", "-"],
 ];
 
-export const initialOutput = "";
 export const maxLength = 17;
 
 export const theme = {
@@ -57,21 +56,25 @@ export const styles = StyleSheet.create({
     marginTop: 19.5,
   },
   contHistory: {
-    flex: 0.45,
-  },
-  contOutput: {
-    height: 140,
+    flex: 1,
+    position: "relative",
+    height: "100%",
   },
   contButtons: {
-    flex: 0.9,
+    maxHeight: (width / 4) * 5,
+    flex: 2,
   },
-  placeHolderOutput: {
+  output: {
     flex: 1,
     justifyContent: "space-between",
+    alignItems: "center",
+    height: width / 6 - 2,
     flexDirection: "row",
-    flexWrap: "wrap",
-    paddingTop: 5,
+    paddingVertical: 5,
     paddingHorizontal: 15,
+    position: "absolute",
+    width: "100%",
+    zIndex: -1,
   },
   txtDefaultOutput: {
     fontFamily,
@@ -163,11 +166,7 @@ export const styles = StyleSheet.create({
   },
   contButton: {
     flex: 1,
-    ...Platform.select({
-      ios: {
-        width: width / 4,
-      },
-    }),
+    width: width / 4,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 0.5,

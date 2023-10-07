@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ThemeContext } from "../../../store/ThemeProvider";
+import { ThemeContext } from "../store/ThemeProvider";
 import { View } from "react-native";
 
 export default () => {

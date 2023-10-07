@@ -1,23 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Text, Animated } from "react-native";
-import { StateContext } from "../../../store/StateProvider";
-import { ThemeContext } from "../../../store/ThemeProvider";
+import { StateContext } from "../store/StateProvider";
+import { ThemeContext } from "../store/ThemeProvider";
 
 export default () => {
   const { evalNumber } = useContext(StateContext);
   const { styles, themeColor, theme } = useContext(ThemeContext);
-  const [translateAnim] = useState(new Animated.Value(140));
+  const evalPosition = styles.output.height * 2;
+
+  const [translateAnim] = useState(new Animated.Value(evalPosition));
 
   useEffect(() => {
     if (evalNumber) {
       Animated.spring(translateAnim, {
         toValue: 0,
-        duration: 5000,
+        duration: 4000,
         useNativeDriver: true,
       }).start();
     } else {
       Animated.spring(translateAnim, {
-        toValue: 140,
+        toValue: evalPosition,
         duration: 100,
         useNativeDriver: true,
       }).start();
@@ -27,8 +29,9 @@ export default () => {
   return (
     <Animated.View
       style={[
-        styles.placeHolderOutput,
+        styles.output,
         {
+          bottom: styles.output.height,
           backgroundColor: themeColor === "dark" ? "#000" : "#dedede",
           transform: [{ translateY: translateAnim }, { perspective: 1000 }],
         },
