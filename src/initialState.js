@@ -6,7 +6,7 @@ import {
   NativeModules,
 } from "react-native";
 
-export const { width, height } = Dimensions.get("window");
+export const { width } = Dimensions.get("window");
 
 export const sysLang =
   Platform.OS === "ios"

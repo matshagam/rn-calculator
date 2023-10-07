@@ -21,7 +21,9 @@ export default () => {
         setMarginBottom(marginBottom - styles.output.height);
       }
     }
+  }, [evalNumber]);
 
+  useEffect(() => {
     if (calcNumber) {
       if (marginBottom === 0) {
         setMarginBottom(marginBottom + styles.output.height);
@@ -31,7 +33,7 @@ export default () => {
         setMarginBottom(0);
       }
     }
-  }, [evalNumber, calcNumber]);
+  }, [calcNumber]);
 
   const onContentChange = () => {
     scrollViewRef.current.scrollToEnd({ animated: true });
