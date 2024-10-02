@@ -5,7 +5,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { StateContext } from "../../store/StateProvider";
 import { ThemeContext } from "../../store/ThemeProvider";
 import Separator from "../../components/Separator";
-import DONATE from "../../../assets/donate.png";
 import SBER_C from "../../../assets/sber_c.png";
 import SBER_B from "../../../assets/sber_b.png";
 import { openUrl } from "../../utils";
@@ -33,8 +32,8 @@ export default () => {
   };
 
   const themeMode = {
-    ru_RU: `${themeColor === "light" ? "Дневной" : "Ночной"}  режим`,
-    en_US: `${themeColor === "light" ? "Day" : "Night"} mode`,
+    ru_RU: `${themeColor === "light" ? "Ночной" : "Дневной"}  режим`,
+    en_US: `${themeColor === "light" ? "Night" : "Day"} mode`,
   };
 
   const title = {
@@ -133,7 +132,7 @@ export default () => {
               <Ionicons
                 size={23}
                 color={theme.secondaryColorTxt}
-                name="ios-trash"
+                name="trash-outline"
               />
             </TouchableOpacity>
           </View>
@@ -161,7 +160,7 @@ export default () => {
             >
               <Ionicons
                 size={23}
-                name={themeColor === "light" ? "ios-moon" : "ios-sunny"}
+                name={themeColor === "light" ? "moon" : "sunny"}
                 color={theme.secondaryColorTxt}
               />
             </TouchableOpacity>
@@ -175,17 +174,6 @@ export default () => {
               paddingBottom: 20,
             }}
           >
-            <View
-              style={{
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: "#fff",
-                borderRadius: 3,
-                padding: 12,
-              }}
-            >
-              <Image style={{ height: 150, width: 150 }} source={DONATE} />
-            </View>
             <TouchableOpacity
               style={{
                 display: "flex",
@@ -193,7 +181,7 @@ export default () => {
                 columnGap: 10,
                 alignItems: "center",
                 justifyContent: "space-between",
-                backgroundColor: "#f2f3f7",
+                backgroundColor: themeColor === "light" ? "#f2f3f7" : "#27ae60",
                 paddingHorizontal: 12,
                 paddingVertical: 10,
                 borderRadius: 3,
@@ -201,8 +189,13 @@ export default () => {
               hitSlop={styles.hitSlop}
               onPress={() => openUrl("https://pay.mysbertips.ru/32127605")}
             >
-              <Text style={{ fontSize: 16 }}>
-                Страница для донатов в Сбер Чаевые
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: theme.primaryColorTxt,
+                }}
+              >
+                Поблагодарить в Сбер Чаевые
               </Text>
               <Image
                 style={{ height: 23, width: 23 }}
@@ -218,7 +211,7 @@ export default () => {
         >
           <Ionicons
             size={35}
-            name="ios-arrow-down"
+            name="arrow-down"
             color={theme.secondaryColorTxt}
           />
         </TouchableOpacity>
