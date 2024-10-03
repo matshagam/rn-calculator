@@ -173,49 +173,54 @@ export default () => {
               justifyContent: "flex-end",
               paddingBottom: 20,
             }}
-          >
-            <TouchableOpacity
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                columnGap: 10,
-                alignItems: "center",
-                justifyContent: "space-between",
-                backgroundColor: themeColor === "light" ? "#f2f3f7" : "#27ae60",
-                paddingHorizontal: 12,
-                paddingVertical: 10,
-                borderRadius: 3,
-              }}
-              hitSlop={styles.hitSlop}
-              onPress={() => openUrl("https://pay.mysbertips.ru/32127605")}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  color: theme.primaryColorTxt,
-                }}
-              >
-                Поблагодарить в Сбер Чаевые
-              </Text>
-              <Image
-                style={{ height: 23, width: 23 }}
-                source={themeColor === "light" ? SBER_C : SBER_B}
-              />
-            </TouchableOpacity>
-          </View>
+          ></View>
         </View>
-        <TouchableOpacity
-          style={{ alignItems: "center", opacity: 0.5 }}
-          hitSlop={styles.hitSlop}
-          onPress={() => _showSettings()}
-        >
-          <Ionicons
-            size={35}
-            name="arrow-down"
-            color={theme.secondaryColorTxt}
-          />
-        </TouchableOpacity>
       </View>
+      <TouchableOpacity
+        style={{ alignItems: "center", opacity: 0.5, marginBottom: 20 }}
+        hitSlop={styles.hitSlop}
+        onPress={() => _showSettings()}
+      >
+        <Ionicons size={35} name="arrow-down" color={theme.secondaryColorTxt} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          flexDirection: "row",
+          columnGap: 10,
+          alignItems: "center",
+          backgroundColor: themeColor === "light" ? "#f2f3f7" : "#27ae60",
+          paddingHorizontal: 22,
+          paddingTop: 20,
+          paddingBottom: styles.container.paddingTop,
+        }}
+        hitSlop={styles.hitSlop}
+        onPress={() => openUrl("https://pay.mysbertips.ru/32127605")}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: 600,
+            color: theme.primaryColorTxt,
+          }}
+        >
+          Спасибо за поддержку
+        </Text>
+        <Text
+          style={{
+            fontSize: 16,
+            marginLeft: "auto",
+            color: theme.primaryColorTxt,
+          }}
+        >
+          СБЕР ЧАЕВЫЕ
+        </Text>
+        <View style={{ width: 35, alignItems: "center", marginLeft: "auto" }}>
+          <Image
+            style={{ height: 23, width: 23 }}
+            source={themeColor === "light" ? SBER_C : SBER_B}
+          />
+        </View>
+      </TouchableOpacity>
     </Modal>
   );
 };
