@@ -181,8 +181,9 @@ export default () => {
       <TouchableOpacity
         style={{
           flexDirection: "row",
-          columnGap: 10,
           alignItems: "center",
+          justifyContent: "space-between",
+          columnGap: 10,
           backgroundColor: themeColor === "light" ? "#f2f3f7" : "#27ae60",
           paddingHorizontal: 22,
           paddingTop: 20,
@@ -194,7 +195,7 @@ export default () => {
         <Text
           style={{
             fontSize: 16,
-            fontWeight: 600,
+            fontWeight: 500,
             color: theme.primaryColorTxt,
           }}
         >
@@ -203,13 +204,13 @@ export default () => {
         <Text
           style={{
             fontSize: 16,
-            marginLeft: "auto",
-            color: theme.primaryColorTxt,
+            fontWeight: 600,
+            color: "#000",
           }}
         >
           СБЕР ЧАЕВЫЕ
         </Text>
-        <View style={{ width: 35, alignItems: "center", marginLeft: "auto" }}>
+        <View style={{ width: 35, alignItems: "center" }}>
           <Image
             style={{ height: 23, width: 23 }}
             source={themeColor === "light" ? SBER_C : SBER_B}
