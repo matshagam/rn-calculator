@@ -165,24 +165,19 @@ export default () => {
               />
             </TouchableOpacity>
           </View>
-          <View
-            style={{
-              display: "flex",
-              rowGap: 10,
-              flex: 1,
-              justifyContent: "flex-end",
-              paddingBottom: 20,
-            }}
-          ></View>
         </View>
+        <TouchableOpacity
+          style={{ alignItems: "center", opacity: 0.5 }}
+          hitSlop={styles.hitSlop}
+          onPress={() => _showSettings()}
+        >
+          <Ionicons
+            size={35}
+            name="arrow-down"
+            color={theme.secondaryColorTxt}
+          />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={{ alignItems: "center", opacity: 0.5, marginBottom: 20 }}
-        hitSlop={styles.hitSlop}
-        onPress={() => _showSettings()}
-      >
-        <Ionicons size={35} name="arrow-down" color={theme.secondaryColorTxt} />
-      </TouchableOpacity>
       <TouchableOpacity
         style={{
           flexDirection: "row",
