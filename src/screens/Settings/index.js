@@ -1,10 +1,16 @@
-import React, { useContext } from "react";
-import { Image, Modal, View, TouchableOpacity, Text } from "react-native";
+import React, { useContext, useState } from "react";
+import {
+  Image,
+  Modal,
+  View,
+  TouchableOpacity,
+  Text,
+  FlatList,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { StateContext } from "../../store/StateProvider";
 import { ThemeContext } from "../../store/ThemeProvider";
-import Separator from "../../components/Separator";
 import SBER_C from "../../../assets/sber_c.png";
 import SBER_B from "../../../assets/sber_b.png";
 import { openUrl } from "../../utils";
@@ -18,8 +24,15 @@ export default () => {
     _saveData,
     _clearHistory,
   } = useContext(StateContext);
-  const { theme, styles, themeColor, _changeThemeColor } =
+  const { theme, styles, colorScheme, themeColor, _changeThemeColor } =
     useContext(ThemeContext);
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState(0);
+
+  const themeMode = {
+    ru_RU: ["Системная", "Светлая", "Темная"],
+    en_US: ["System", "Light", "Dark"],
+  };
 
   const historySaved = {
     ru_RU: `История сохраняется`,
@@ -31,14 +44,25 @@ export default () => {
     en_US: "Clear history",
   };
 
-  const themeMode = {
-    ru_RU: `${themeColor === "light" ? "Ночной" : "Дневной"}  режим`,
-    en_US: `${themeColor === "light" ? "Night" : "Day"} mode`,
-  };
-
   const title = {
     ru_RU: "Настройки",
     en_US: "Settings",
+  };
+
+  const handleThemeOpen = () => setIsThemeMenuOpen(!isThemeMenuOpen);
+
+  const handleThemeItem = (item) => {
+    const initialTheme = [colorScheme, "light", "dark"];
+    const index = themeMode[sysLang].indexOf(item);
+
+    setSelectedTheme(index);
+    setIsThemeMenuOpen(!isThemeMenuOpen);
+
+    if (item === "Системная") {
+      _changeThemeColor(colorScheme);
+    } else {
+      _changeThemeColor(initialTheme[index]);
+    }
   };
 
   return (
@@ -136,7 +160,6 @@ export default () => {
               />
             </TouchableOpacity>
           </View>
-          <Separator />
           <View
             style={{
               width: "100%",
@@ -146,23 +169,47 @@ export default () => {
               alignItems: "center",
             }}
           >
-            <Text
-              style={{
-                color: theme.secondaryColorTxt,
-              }}
-            >
-              {themeMode[sysLang]}
-            </Text>
+            <Text style={{ color: theme.secondaryColorTxt }}>Тема</Text>
             <TouchableOpacity
-              style={{ opacity: 0.5, width: 35, alignItems: "center" }}
+              style={{
+                alignItems: "flex-end",
+                position: "relative",
+                width: 80,
+              }}
               hitSlop={styles.hitSlop}
-              onPress={() => _changeThemeColor()}
+              onPress={handleThemeOpen}
             >
-              <Ionicons
-                size={23}
-                name={themeColor === "light" ? "moon" : "sunny"}
-                color={theme.secondaryColorTxt}
-              />
+              <Text style={{ color: theme.secondaryColorTxt }}>
+                {themeMode[sysLang][selectedTheme]}
+              </Text>
+              {isThemeMenuOpen ? (
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 30,
+                    right: 0,
+                  }}
+                >
+                  <FlatList
+                    data={themeMode[sysLang].filter(
+                      (_, index) => index !== selectedTheme,
+                    )}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        onPress={() => handleThemeItem(item)}
+                        style={{
+                          height: 30,
+                          alignItems: "flex-end",
+                        }}
+                      >
+                        <Text style={{ color: theme.secondaryColorTxt }}>
+                          {item}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  />
+                </View>
+              ) : null}
             </TouchableOpacity>
           </View>
         </View>
@@ -183,7 +230,6 @@ export default () => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          columnGap: 10,
           backgroundColor: themeColor === "light" ? "#f2f3f7" : "#27ae60",
           paddingHorizontal: 22,
           paddingTop: 20,
@@ -201,16 +247,18 @@ export default () => {
         >
           Спасибо за поддержку
         </Text>
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: 600,
-            color: "#000",
-          }}
+        <View
+          style={{ flexDirection: "row", columnGap: 10, alignItems: "center" }}
         >
-          СБЕР ЧАЕВЫЕ
-        </Text>
-        <View style={{ width: 35, alignItems: "center" }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 600,
+              color: themeColor === "light" ? "#27ae60" : "#000",
+            }}
+          >
+            СБЕР ЧАЕВЫЕ
+          </Text>
           <Image
             style={{ height: 23, width: 23 }}
             source={themeColor === "light" ? SBER_C : SBER_B}

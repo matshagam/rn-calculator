@@ -10,13 +10,14 @@ export default ({ children }) => {
     themeColor: colorScheme,
     theme: theme[colorScheme],
     styles: styles,
+    colorScheme,
   });
 
-  const _changeThemeColor = () => {
+  const _changeThemeColor = (item) => {
     setState({
       ...state,
-      themeColor: state.themeColor === "dark" ? "light" : "dark",
-      theme: state.theme === theme.light ? theme.dark : theme.light,
+      themeColor: item,
+      theme: theme[item],
     });
   };
 
