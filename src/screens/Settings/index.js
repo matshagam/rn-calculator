@@ -35,8 +35,8 @@ export default () => {
   };
 
   const historySaved = {
-    ru_RU: `История сохраняется`,
-    en_US: `The history is saved"`,
+    ru_RU: "История сохраняется?",
+    en_US: "The history is saved?",
   };
 
   const historyClear = {
@@ -55,14 +55,12 @@ export default () => {
     const initialTheme = [colorScheme, "light", "dark"];
     const index = themeMode[sysLang].indexOf(item);
 
-    setSelectedTheme(index);
-    setIsThemeMenuOpen(!isThemeMenuOpen);
-
     if (item === "Системная") {
       _changeThemeColor(colorScheme);
-    } else {
-      _changeThemeColor(initialTheme[index]);
-    }
+    } else _changeThemeColor(initialTheme[index]);
+
+    setSelectedTheme(index);
+    setIsThemeMenuOpen(!isThemeMenuOpen);
   };
 
   return (
@@ -105,43 +103,6 @@ export default () => {
                 color: theme.secondaryColorTxt,
               }}
             >
-              {historySaved[sysLang]}
-            </Text>
-            <TouchableOpacity
-              style={{
-                opacity: 0.5,
-                width: 35,
-                padding: 3,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              hitSlop={styles.hitSlop}
-              onPress={() => _saveData()}
-            >
-              <Text
-                style={{
-                  color: theme.secondaryColorTxt,
-                  fontWeight: 700,
-                }}
-              >
-                {isHistory ? "Да" : "Нет"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              width: "100%",
-              height: 40,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                color: theme.secondaryColorTxt,
-              }}
-            >
               {historyClear[sysLang]}
             </Text>
             <TouchableOpacity
@@ -169,11 +130,41 @@ export default () => {
               alignItems: "center",
             }}
           >
+            <Text
+              style={{
+                color: theme.secondaryColorTxt,
+              }}
+            >
+              {historySaved[sysLang]}
+            </Text>
+            <TouchableOpacity
+              style={{
+                width: 35,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              hitSlop={styles.hitSlop}
+              onPress={() => _saveData()}
+            >
+              <Text style={{ color: theme.secondaryColorTxt }}>
+                {isHistory ? "Да" : "Нет"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              width: "100%",
+              height: 40,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <Text style={{ color: theme.secondaryColorTxt }}>Тема</Text>
             <TouchableOpacity
               style={{
-                alignItems: "flex-end",
                 position: "relative",
+                alignItems: "flex-end",
                 width: 80,
               }}
               hitSlop={styles.hitSlop}
@@ -198,8 +189,10 @@ export default () => {
                       <TouchableOpacity
                         onPress={() => handleThemeItem(item)}
                         style={{
-                          height: 30,
+                          height: 40,
+                          width: 80,
                           alignItems: "flex-end",
+                          justifyContent: "center",
                         }}
                       >
                         <Text style={{ color: theme.secondaryColorTxt }}>
