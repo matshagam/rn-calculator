@@ -24,10 +24,15 @@ export default () => {
     _saveData,
     _clearHistory,
   } = useContext(StateContext);
-  const { theme, styles, colorScheme, themeColor, _changeThemeColor } =
-    useContext(ThemeContext);
+  const {
+    theme,
+    styles,
+    colorScheme,
+    themeColor,
+    selectedTheme,
+    _changeThemeColor,
+  } = useContext(ThemeContext);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState(0);
 
   const themeMode = {
     ru_RU: ["Системная", "Светлая", "Темная"],
@@ -56,10 +61,9 @@ export default () => {
     const index = themeMode[sysLang].indexOf(item);
 
     if (item === "Системная") {
-      _changeThemeColor(colorScheme);
-    } else _changeThemeColor(initialTheme[index]);
+      _changeThemeColor(colorScheme, index);
+    } else _changeThemeColor(initialTheme[index], index);
 
-    setSelectedTheme(index);
     setIsThemeMenuOpen(!isThemeMenuOpen);
   };
 

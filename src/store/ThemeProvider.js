@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { styles, theme } from "../initialState";
 import { useColorScheme } from "react-native";
 
@@ -6,6 +6,7 @@ export const ThemeContext = createContext();
 
 export default ({ children }) => {
   const colorScheme = useColorScheme();
+  const [selectedTheme, setSelectedTheme] = useState(0);
   const [state, setState] = useState({
     themeColor: colorScheme,
     theme: theme[colorScheme],
@@ -13,7 +14,9 @@ export default ({ children }) => {
     colorScheme,
   });
 
-  const _changeThemeColor = (item) => {
+  const _changeThemeColor = (item, index) => {
+    setSelectedTheme(index);
+
     setState({
       ...state,
       themeColor: item,
@@ -35,10 +38,15 @@ export default ({ children }) => {
     if (rowIndex === 0 && colIndex === 2) return styles.actionStyle;
   };
 
+  useEffect(() => {
+    if (selectedTheme === 0) _changeThemeColor(colorScheme, selectedTheme);
+  }, [colorScheme]);
+
   return (
     <ThemeContext.Provider
       value={{
         ...state,
+        selectedTheme,
         _changeThemeColor: _changeThemeColor,
         _styledButtons: _styledButtons,
       }}
